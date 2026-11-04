@@ -1,0 +1,90 @@
+<article class="materi-content">
+  <h2>Struktur Dasar HTML</h2>
+  <p>
+    HTML (<strong>HyperText Markup Language</strong>) adalah bahasa markup yang
+    digunakan untuk menyusun struktur sebuah halaman web. Setiap halaman web yang
+    kamu lihat di browser — termasuk website ini — dibangun dengan HTML sebagai
+    kerangka dasarnya. Sebelum mulai mengerjakan soal di materi ini, pastikan kamu
+    memahami bagian-bagian dasar berikut.</p>
+
+  <h3>1. Kerangka Dokumen HTML</h3>
+  <p>
+    Setiap dokumen HTML punya struktur wajib yang sama. Berikut kerangka paling
+    dasar yang akan selalu kamu temukan:</p>
+  <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Judul di Tab Browser&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;!-- Semua konten yang tampil di halaman ditulis di sini --&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+  <ul>
+    <li><code>&lt;!DOCTYPE html&gt;</code> memberi tahu browser bahwa dokumen ini ditulis dengan standar HTML5.</li>
+    <li><code>&lt;html&gt;</code> adalah elemen pembungkus seluruh isi dokumen.</li>
+    <li><code>&lt;head&gt;</code> berisi informasi tentang halaman (judul, metadata) yang <em>tidak</em> tampil langsung di layar.</li>
+    <li><code>&lt;title&gt;</code> menentukan teks yang muncul di tab browser.</li>
+    <li><code>&lt;body&gt;</code> berisi semua konten yang benar-benar dilihat pengguna: teks, gambar, tombol, dan seterusnya.</li>
+  </ul>
+
+  <h3>2. Heading dan Paragraf</h3>
+  <p>
+    Untuk menampilkan judul dan teks di halaman, HTML menyediakan tag heading
+    (<code>&lt;h1&gt;</code> sampai <code>&lt;h6&gt;</code>) dan tag paragraf
+    (<code>&lt;p&gt;</code>):</p>
+  <pre><code>&lt;h1&gt;Judul Utama Halaman&lt;/h1&gt;
+&lt;p&gt;Ini adalah paragraf yang menjelaskan isi halaman dengan lebih detail.&lt;/p&gt;</code></pre>
+  <p>
+    <code>&lt;h1&gt;</code> biasanya hanya dipakai satu kali per halaman sebagai judul
+    paling penting, sedangkan <code>&lt;p&gt;</code> bisa dipakai berkali-kali untuk
+    memecah konten menjadi beberapa paragraf yang mudah dibaca.</p>
+
+  <h3>3. Komentar HTML</h3>
+  <p>
+    Komentar digunakan untuk menulis catatan di dalam kode yang <strong>tidak akan
+    ditampilkan</strong> oleh browser. Ini berguna untuk menjelaskan bagian-bagian
+    kode, terutama saat kode makin kompleks:</p>
+  <pre><code>&lt;!-- Ini adalah komentar, tidak akan terlihat di halaman --&gt;
+&lt;h1&gt;Judul Halaman&lt;/h1&gt; &lt;!-- komentar juga bisa diletakkan setelah tag --&gt;</code></pre>
+  <p>
+    Komentar diawali dengan <code>&lt;!--</code> dan diakhiri dengan <code>--&gt;</code>.
+    Apa pun di antara keduanya akan diabaikan oleh browser.</p>
+
+  <h3>4. Meta Charset</h3>
+  <p>
+    Agar karakter khusus (seperti huruf é, simbol mata uang, atau emoji) tampil
+    dengan benar, tambahkan tag <code>&lt;meta charset="utf-8"&gt;</code> di dalam
+    <code>&lt;head&gt;</code>:</p>
+  <pre><code>&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;title&gt;Halamanku&lt;/title&gt;
+&lt;/head&gt;</code></pre>
+
+  <h3>5. Menyusun Semuanya Jadi Satu Halaman</h3>
+  <p>
+    Gabungan dari semua elemen di atas membentuk halaman HTML yang lengkap dan
+    terstruktur:</p>
+  <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Profil Saya&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Selamat Datang di Profil Saya&lt;/h1&gt;
+    &lt;p&gt;Saya adalah mahasiswa PTIK UNM yang sedang belajar pemrograman web.&lt;/p&gt;
+    &lt;p&gt;Materi favorit saya sejauh ini adalah HTML dan CSS.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+  <div class="materi-tips">
+    <h3>💡 Tips Sebelum Mengerjakan Soal</h3>
+    <ul>
+      <li>Selalu pastikan setiap tag pembuka (<code>&lt;tag&gt;</code>) punya tag penutup (<code>&lt;/tag&gt;</code>), kecuali tag tertentu yang memang tidak butuh penutup.</li>
+      <li><code>&lt;head&gt;</code> dan <code>&lt;body&gt;</code> adalah dua bagian yang terpisah — konten yang ingin tampil di layar harus ada di dalam <code>&lt;body&gt;</code>, bukan <code>&lt;head&gt;</code>.</li>
+      <li>Komentar HTML berbeda dari komentar CSS (<code>/* ... */</code>) atau JavaScript (<code>// ...</code>) — jangan tertukar formatnya.</li>
+      <li>Di soal materi ini kamu akan diminta membuat kerangka dasar, menambahkan heading dan paragraf, menulis komentar penjelas, dan menggabungkan semuanya dalam satu halaman lengkap dengan meta charset.</li>
+    </ul>
+  </div>
+</article>

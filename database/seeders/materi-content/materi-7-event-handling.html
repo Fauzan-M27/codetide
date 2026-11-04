@@ -1,0 +1,114 @@
+<article class="materi-content">
+  <h2>Event Handling</h2>
+  <p>
+    "Event" adalah kejadian yang terjadi di halaman web — pengguna mengklik
+    tombol, mengetik di kolom input, atau mengirim form. JavaScript bisa
+    "mendengarkan" kejadian-kejadian ini dan menjalankan kode sebagai responsnya.
+    Ini yang membuat website terasa hidup dan interaktif.</p>
+
+  <h3>1. Event Listener Dasar — Klik</h3>
+  <p>
+    Untuk menjalankan kode saat sebuah tombol diklik, gunakan
+    <code>addEventListener</code>:</p>
+  <pre><code>&lt;button id="btn"&gt;Klik Saya&lt;/button&gt;
+&lt;p id="teks"&gt;Teks awal&lt;/p&gt;
+
+&lt;script&gt;
+  document.getElementById("btn").addEventListener("click", function() {
+    document.getElementById("teks").innerText = "Tombol sudah diklik!";
+  });
+&lt;/script&gt;</code></pre>
+  <p>
+    Polanya: tangkap elemen dengan <code>getElementById</code>, panggil
+    <code>.addEventListener("nama_event", function() { ... })</code>, lalu tulis
+    apa yang ingin terjadi di dalam fungsi tersebut.</p>
+
+  <h3>2. Event Listener pada Beberapa Elemen</h3>
+  <p>
+    Kamu bisa memasang event listener pada beberapa tombol sekaligus, masing-masing
+    dengan aksi yang berbeda:</p>
+  <pre><code>&lt;button id="btn1"&gt;Tombol 1&lt;/button&gt;
+&lt;button id="btn2"&gt;Tombol 2&lt;/button&gt;
+&lt;p id="output"&gt;-&lt;/p&gt;
+
+&lt;script&gt;
+  document.getElementById("btn1").addEventListener("click", function() {
+    document.getElementById("output").innerText = "Tombol 1 ditekan";
+  });
+  document.getElementById("btn2").addEventListener("click", function() {
+    document.getElementById("output").innerText = "Tombol 2 ditekan";
+  });
+&lt;/script&gt;</code></pre>
+
+  <h3>3. Event Keyup — Live Preview saat Mengetik</h3>
+  <p>
+    Event <code>keyup</code> terjadi setiap kali pengguna melepas tombol keyboard
+    (setelah mengetik satu karakter). Berguna untuk fitur "live preview":</p>
+  <pre><code>&lt;input type="text" id="inputan"&gt;
+&lt;p id="preview"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+  document.getElementById("inputan").addEventListener("keyup", function() {
+    const nilai = document.getElementById("inputan").value;
+    document.getElementById("preview").innerText = nilai;
+  });
+&lt;/script&gt;</code></pre>
+  <p>
+    Perhatikan: untuk mengambil teks yang diketik di dalam <code>&lt;input&gt;</code>,
+    gunakan <code>.value</code> — berbeda dari elemen seperti <code>&lt;p&gt;</code>
+    yang pakai <code>.innerText</code>.</p>
+
+  <h3>4. Event Submit dan Mencegah Reload Halaman</h3>
+  <p>
+    Secara default, menekan tombol submit pada form akan membuat halaman
+    <em>reload</em> (memuat ulang). Untuk mencegah ini — misalnya supaya kita bisa
+    memproses data dengan JavaScript tanpa kehilangan tampilan — gunakan
+    <code>event.preventDefault()</code>:</p>
+  <pre><code>&lt;form id="myForm"&gt;
+  &lt;input type="text" name="nama"&gt;
+  &lt;button type="submit"&gt;Submit&lt;/button&gt;
+&lt;/form&gt;
+&lt;p id="pesan"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+  document.getElementById("myForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    document.getElementById("pesan").innerText = "Form berhasil dikirim!";
+  });
+&lt;/script&gt;</code></pre>
+  <p>
+    Perhatikan parameter <code>event</code> pada fungsi — ini mewakili "kejadian"
+    yang baru terjadi, dan <code>event.preventDefault()</code> memberi tahu browser
+    untuk tidak melakukan perilaku bawaannya (reload halaman).</p>
+
+  <h3>5. Menggabungkan Beberapa Event — Kalkulator Sederhana</h3>
+  <p>
+    Fitur yang lebih kompleks biasanya menggabungkan beberapa event sekaligus.
+    Contoh kalkulator sederhana yang menggabungkan input angka dan klik tombol:</p>
+  <pre><code>&lt;input type="number" id="angka1"&gt;
+&lt;input type="number" id="angka2"&gt;
+&lt;button id="btnTambah"&gt;Tambah&lt;/button&gt;
+&lt;p id="hasil"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+  document.getElementById("btnTambah").addEventListener("click", function() {
+    const a = Number(document.getElementById("angka1").value);
+    const b = Number(document.getElementById("angka2").value);
+    document.getElementById("hasil").innerText = "Hasil: " + (a + b);
+  });
+&lt;/script&gt;</code></pre>
+  <p>
+    Perhatikan penggunaan <code>Number(...)</code> untuk mengubah nilai input
+    (yang secara default berupa teks) menjadi angka, supaya operator
+    <code>+</code> benar-benar menjumlahkan, bukan menggabungkan teks.</p>
+
+  <div class="materi-tips">
+    <h3>💡 Tips Sebelum Mengerjakan Soal</h3>
+    <ul>
+      <li>Nama event ditulis dalam tanda kutip dan huruf kecil: <code>"click"</code>, <code>"keyup"</code>, <code>"submit"</code> — bukan <code>"Click"</code> atau tanpa kutip.</li>
+      <li>Untuk <code>&lt;input&gt;</code>, ambil nilainya dengan <code>.value</code>; untuk elemen teks biasa seperti <code>&lt;p&gt;</code>, gunakan <code>.innerText</code>.</li>
+      <li>Event <code>submit</code> dipasang pada elemen <code>&lt;form&gt;</code>, bukan pada tombolnya — dan jangan lupa <code>event.preventDefault()</code> kalau tidak ingin halaman reload.</li>
+      <li>Soal terakhir materi ini adalah <strong>Clone Challenge</strong>: kamu akan diminta membuat kalkulator sederhana dari nol berdasarkan contoh yang diperlihatkan, dengan menggabungkan event klik dan input seperti pada contoh di atas.</li>
+    </ul>
+  </div>
+</article>

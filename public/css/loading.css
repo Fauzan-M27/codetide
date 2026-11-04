@@ -1,0 +1,502 @@
+/* ═══════════════════════════════════════════════════
+   LOADING STATES — CodeTide
+   Pixel art themed loading indicators
+═══════════════════════════════════════════════════ */
+
+:root {
+    --loading-cyan: #53EAFD;
+    --loading-purple: #ED6AFF;
+    --loading-yellow: #FFDF20;
+}
+
+/* ── FULL PAGE LOADING OVERLAY ────────────────────── */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 13, 26, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 24px;
+    opacity: 0;
+    animation: fadeIn 0.2s forwards;
+}
+
+.loading-overlay.loading-out {
+    animation: fadeOut 0.3s forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; }
+}
+
+/* ── LOADING SPINNER ──────────────────────────────── */
+.loading-spinner {
+    width: 80px;
+    height: 80px;
+    border: 3px solid rgba(83, 234, 253, 0.1);
+    border-top-color: var(--loading-cyan);
+    border-right-color: var(--loading-purple);
+    animation: spin 1s linear infinite;
+    position: relative;
+}
+
+.loading-spinner::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 2px solid rgba(237, 106, 255, 0.2);
+    border-top-color: var(--loading-purple);
+    animation: spin 1.5s linear infinite reverse;
+}
+
+.loading-spinner::after {
+    content: '';
+    position: absolute;
+    inset: 18px;
+    border: 2px solid rgba(255, 223, 32, 0.3);
+    border-top-color: var(--loading-yellow);
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── LOADING TEXT ─────────────────────────────────── */
+.loading-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.6rem;
+    color: var(--loading-cyan);
+    letter-spacing: 0.1em;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.loading-text::after {
+    content: '';
+    animation: dots 1.5s steps(3, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    80%, 100% { content: '...'; }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ── LOADING HINT ─────────────────────────────────── */
+.loading-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: rgba(232, 244, 255, 0.5);
+    margin-top: 8px;
+}
+
+/* ── BUTTON LOADING STATE ─────────────────────────── */
+.btn-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 1;
+    padding-left: 48px !important; /* Make space for spinner */
+}
+
+.btn-loading::before {
+    content: '';
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    animation: btnSpin 0.6s linear infinite;
+}
+
+/* Pixel art square spinner */
+.btn-loading.btn-pixel::before {
+    border-radius: 0;
+}
+
+/* Smooth circular spinner */
+.btn-loading.btn-smooth::before {
+    border-radius: 50%;
+}
+
+@keyframes btnSpin {
+    to { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* Alternative: Dot loading animation */
+.btn-loading.btn-dots::before {
+    content: '';
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    background: currentColor;
+    animation: dotPulse 1s ease-in-out infinite;
+}
+
+.btn-loading.btn-dots::after {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    background: currentColor;
+    animation: dotPulse 1s ease-in-out infinite 0.2s;
+}
+
+@keyframes dotPulse {
+    0%, 100% { 
+        opacity: 0.3;
+        transform: translateY(-50%) scale(0.8);
+    }
+    50% { 
+        opacity: 1;
+        transform: translateY(-50%) scale(1.2);
+    }
+}
+
+/* Text fade during loading */
+.btn-loading {
+    transition: all 0.3s ease;
+}
+
+.btn-loading .btn-original-text {
+    opacity: 0.7;
+}
+
+/* ── INLINE LOADING SPINNER ───────────────────────── */
+.loading-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: rgba(232, 244, 255, 0.7);
+}
+
+.loading-inline-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(83, 234, 253, 0.2);
+    border-top-color: var(--loading-cyan);
+    animation: spin 0.8s linear infinite;
+}
+
+/* ── AUTOSAVE INDICATOR ───────────────────────────── */
+.autosave-indicator {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 8px 16px;
+    background: rgba(9, 19, 38, 0.95);
+    border: 1px solid rgba(83, 234, 253, 0.3);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.4rem;
+    color: var(--loading-cyan);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 9998;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    pointer-events: none;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+}
+
+.autosave-indicator.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.autosave-indicator.saving {
+    border-color: var(--loading-yellow);
+    color: var(--loading-yellow);
+}
+
+.autosave-indicator.saved {
+    border-color: var(--loading-cyan);
+    color: var(--loading-cyan);
+}
+
+.autosave-indicator.error {
+    border-color: #FF6B6B;
+    color: #FF6B6B;
+}
+
+.autosave-icon {
+    width: 12px;
+    height: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.autosave-indicator.saving .autosave-icon::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    animation: spin 0.8s linear infinite;
+}
+
+/* ── SKELETON LOADING ─────────────────────────────── */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        rgba(83, 234, 253, 0.05) 0%,
+        rgba(83, 234, 253, 0.1) 50%,
+        rgba(83, 234, 253, 0.05) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border: 1px solid rgba(83, 234, 253, 0.1);
+}
+
+.skeleton-text {
+    height: 16px;
+    margin-bottom: 8px;
+}
+
+.skeleton-title {
+    height: 24px;
+    width: 60%;
+    margin-bottom: 16px;
+}
+
+.skeleton-card {
+    height: 120px;
+    width: 100%;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* ── PROGRESS CIRCLE ──────────────────────────────── */
+.progress-circle {
+    width: 60px;
+    height: 60px;
+    position: relative;
+}
+
+.progress-circle svg {
+    transform: rotate(-90deg);
+}
+
+.progress-circle-bg {
+    fill: none;
+    stroke: rgba(83, 234, 253, 0.1);
+    stroke-width: 4;
+}
+
+.progress-circle-fill {
+    fill: none;
+    stroke: var(--loading-cyan);
+    stroke-width: 4;
+    stroke-linecap: square;
+    stroke-dasharray: 157;
+    stroke-dashoffset: 157;
+    transition: stroke-dashoffset 0.3s ease;
+}
+
+.progress-circle-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.5rem;
+    color: var(--loading-cyan);
+}
+
+/* ── RESPONSIVE ───────────────────────────────────── */
+@media (max-width: 768px) {
+    .loading-spinner {
+        width: 60px;
+        height: 60px;
+    }
+
+    .loading-text {
+        font-size: 0.5rem;
+    }
+
+    .autosave-indicator {
+        bottom: 16px;
+        right: 16px;
+        padding: 6px 12px;
+        font-size: 0.35rem;
+    }
+}
+
+/* ── PARTICLE EFFECT (OPTIONAL) ───────────────────── */
+.loading-particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.loading-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--loading-cyan);
+    opacity: 0.5;
+    animation: particleFloat 3s ease-in-out infinite;
+}
+
+.loading-particle:nth-child(2n) { 
+    background: var(--loading-purple);
+    animation-delay: 0.5s;
+}
+
+.loading-particle:nth-child(3n) { 
+    background: var(--loading-yellow);
+    animation-delay: 1s;
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.5;
+    }
+    90% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(-100px) translateX(100px);
+        opacity: 0;
+    }
+}
+
+
+/* ── PIXEL BLOCK LOADING (ALTERNATIVE) ────────────── */
+.btn-loading.btn-blocks::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: currentColor;
+    box-shadow: 
+        8px 0 0 currentColor,
+        16px 0 0 currentColor;
+    animation: blockSlide 0.8s ease-in-out infinite;
+}
+
+@keyframes blockSlide {
+    0% {
+        opacity: 0.3;
+        transform: translateY(-50%) translateX(0);
+    }
+    33% {
+        opacity: 1;
+        transform: translateY(-50%) translateX(4px);
+    }
+    66% {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+    }
+    100% {
+        opacity: 0.3;
+        transform: translateY(-50%) translateX(0);
+    }
+}
+
+/* ── PULSE LOADING (ALTERNATIVE) ───────────────────── */
+.btn-loading.btn-pulse::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background: currentColor;
+    animation: pulseScale 1s ease-in-out infinite;
+}
+
+@keyframes pulseScale {
+    0%, 100% {
+        transform: translateY(-50%) scale(0.5);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translateY(-50%) scale(1.2);
+        opacity: 1;
+    }
+}
+
+/* ── BOUNCE LOADING (ALTERNATIVE) ──────────────────── */
+.btn-loading.btn-bounce::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: currentColor;
+    animation: bounce 0.6s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(-50%) translateY(0);
+    }
+    50% {
+        transform: translateY(-50%) translateY(-6px);
+    }
+}
+
+/* ── SPINNER VARIANTS ──────────────────────────────── */
+/* Default is square spinner (pixel art style) */
+.btn-loading {
+    /* Default: square spinner */
+}
+
+/* Smooth circular spinner */
+.btn-loading-smooth::before {
+    border-radius: 50% !important;
+}
+
+/* Faster spin */
+.btn-loading-fast::before {
+    animation-duration: 0.4s !important;
+}
+
+/* Slower spin */
+.btn-loading-slow::before {
+    animation-duration: 1s !important;
+}

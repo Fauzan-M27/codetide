@@ -1,0 +1,91 @@
+<article class="materi-content">
+  <h2>HTML Lanjut — Link, Frame, Tabel</h2>
+  <p>
+    Setelah memahami struktur dasar HTML, sekarang saatnya belajar membuat halaman
+    yang saling terhubung dan menampilkan data terstruktur. Materi ini membahas
+    tiga elemen penting: <strong>link (tautan)</strong>, <strong>tabel</strong>, dan
+    <strong>iframe</strong>.</p>
+
+  <h3>1. Link Internal (dalam satu halaman)</h3>
+  <p>
+    Link internal digunakan untuk berpindah ke bagian lain <em>di halaman yang
+    sama</em>, misalnya tombol "kembali ke atas". Caranya dengan memberi
+    <code>id</code> pada elemen tujuan, lalu mengarahkan <code>href</code> ke
+    <code>#id</code> tersebut:</p>
+  <pre><code>&lt;h1 id="atas"&gt;Judul&lt;/h1&gt;
+
+&lt;a href="#atas"&gt;Kembali ke Atas&lt;/a&gt;</code></pre>
+  <p>
+    Perhatikan: nilai <code>href</code> diawali tanda pagar (<code>#</code>) diikuti
+    nama <code>id</code> elemen yang dituju — <strong>tanpa spasi</strong> dan harus
+    sama persis dengan id aslinya (huruf besar/kecil berpengaruh).</p>
+
+  <h3>2. Link Eksternal (ke halaman lain)</h3>
+  <p>
+    Untuk tautan ke website lain, isi <code>href</code> dengan URL lengkap. Supaya
+    halaman tujuan terbuka di <strong>tab baru</strong> (tidak menggantikan halaman
+    yang sedang dibuka), tambahkan atribut <code>target="_blank"</code>:</p>
+  <pre><code>&lt;a href="https://www.google.com" target="_blank"&gt;Buka Google&lt;/a&gt;</code></pre>
+
+  <h3>3. Tabel</h3>
+  <p>
+    Tabel digunakan untuk menampilkan data dalam bentuk baris dan kolom. Tiga tag
+    utamanya: <code>&lt;table&gt;</code> sebagai pembungkus, <code>&lt;tr&gt;</code>
+    (table row) untuk setiap baris, dan di dalam baris ada <code>&lt;th&gt;</code>
+    (table header, untuk judul kolom) atau <code>&lt;td&gt;</code> (table data,
+    untuk isi data biasa):</p>
+  <pre><code>&lt;table&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Nama&lt;/th&gt;
+    &lt;th&gt;Semester&lt;/th&gt;
+    &lt;th&gt;Jurusan&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Budi&lt;/td&gt;
+    &lt;td&gt;3&lt;/td&gt;
+    &lt;td&gt;PTIK&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+  <p>
+    Baris pertama biasanya berisi <code>&lt;th&gt;</code> sebagai judul kolom
+    (ditampilkan tebal oleh browser secara default), sedangkan baris-baris berikutnya
+    berisi <code>&lt;td&gt;</code> sebagai data sebenarnya.</p>
+
+  <h3>4. Iframe</h3>
+  <p>
+    <code>&lt;iframe&gt;</code> digunakan untuk menampilkan halaman web lain
+    <em>di dalam</em> halamanmu sendiri, seperti jendela kecil yang menampilkan
+    konten dari sumber lain (video YouTube yang di-embed adalah contoh iframe):</p>
+  <pre><code>&lt;iframe src="https://www.example.com" width="400" height="300"&gt;&lt;/iframe&gt;</code></pre>
+  <p>
+    Atribut <code>src</code> wajib diisi dengan alamat halaman yang ingin
+    ditampilkan — tanpa ini, iframe akan kosong.</p>
+
+  <h3>5. Menggabungkan Semuanya</h3>
+  <p>
+    Dalam praktiknya, sebuah halaman navigasi biasanya menggabungkan beberapa link,
+    tabel data, dan kadang iframe sekaligus:</p>
+  <pre><code>&lt;nav&gt;
+  &lt;a href="#profil"&gt;Profil&lt;/a&gt;
+  &lt;a href="https://unm.ac.id" target="_blank"&gt;Website UNM&lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;h2 id="profil"&gt;Data Mahasiswa&lt;/h2&gt;
+&lt;table&gt;
+  &lt;tr&gt;&lt;th&gt;Nama&lt;/th&gt;&lt;th&gt;NIM&lt;/th&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;Budi&lt;/td&gt;&lt;td&gt;12345&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;iframe src="https://www.example.com" width="300" height="200"&gt;&lt;/iframe&gt;</code></pre>
+
+  <div class="materi-tips">
+    <h3>💡 Tips Sebelum Mengerjakan Soal</h3>
+    <ul>
+      <li>Link internal memakai <code>#id</code>, link eksternal memakai URL lengkap (<code>https://...</code>) — jangan tertukar.</li>
+      <li><code>target="_blank"</code> hanya relevan untuk link eksternal; link internal tidak perlu atribut ini.</li>
+      <li>Setiap <code>&lt;tr&gt;</code> harus berisi jumlah sel (<code>&lt;th&gt;</code>/<code>&lt;td&gt;</code>) yang konsisten antar baris, supaya tabel tidak berantakan.</li>
+      <li>Jangan lupa atribut <code>src</code> pada <code>&lt;iframe&gt;</code> — tanpa itu, iframe tidak menampilkan apa-apa.</li>
+      <li>Di soal materi ini kamu akan membuat link internal, link eksternal, tabel 3x3, iframe, lalu menggabungkan ketiganya dalam satu halaman navigasi lengkap.</li>
+    </ul>
+  </div>
+</article>

@@ -1,0 +1,120 @@
+<article class="materi-content">
+  <h2>Manipulasi DOM & Logika Sederhana</h2>
+  <p>
+    DOM (<strong>Document Object Model</strong>) adalah representasi halaman HTML
+    yang bisa "diutak-atik" oleh JavaScript secara langsung — mengubah warna,
+    menyembunyikan elemen, atau menambah konten baru, semuanya tanpa perlu memuat
+    ulang halaman. Materi terakhir ini juga membahas logika kondisional dan
+    perulangan, dua konsep dasar pemrograman yang penting.</p>
+
+  <h3>1. Mengubah Style Elemen via JavaScript</h3>
+  <p>
+    Setiap elemen HTML yang ditangkap dengan <code>getElementById</code> punya
+    properti <code>.style</code> yang bisa diubah langsung dari JavaScript:</p>
+  <pre><code>&lt;div id="box" style="width:200px;height:200px;background:gray;"&gt;&lt;/div&gt;
+&lt;button id="btnUbah"&gt;Ubah Warna&lt;/button&gt;
+
+&lt;script&gt;
+  document.getElementById("btnUbah").addEventListener("click", function() {
+    document.getElementById("box").style.backgroundColor = "yellow";
+  });
+&lt;/script&gt;</code></pre>
+  <p>
+    Perhatikan penamaan di JavaScript: properti CSS <code>background-color</code>
+    (dengan tanda hubung) ditulis sebagai <code>backgroundColor</code> (tanpa tanda
+    hubung, huruf kedua jadi kapital) saat diakses lewat <code>.style</code>.</p>
+
+  <h3>2. Toggle Class</h3>
+  <p>
+    Daripada mengubah style satu per satu, cara yang lebih rapi adalah menyiapkan
+    class di CSS, lalu menambah/menghapusnya lewat JavaScript dengan
+    <code>classList.toggle()</code>:</p>
+  <pre><code>&lt;style&gt;
+  .active { color: red; font-weight: bold; }
+&lt;/style&gt;
+
+&lt;p id="teks"&gt;Teks ini bisa berubah&lt;/p&gt;
+&lt;button id="btnToggle"&gt;Toggle&lt;/button&gt;
+
+&lt;script&gt;
+  document.getElementById("btnToggle").addEventListener("click", function() {
+    document.getElementById("teks").classList.toggle("active");
+  });
+&lt;/script&gt;</code></pre>
+  <p>
+    <code>toggle()</code> otomatis menambahkan class kalau belum ada, atau
+    menghapusnya kalau sudah ada — jadi satu baris kode saja cukup untuk
+    "menyalakan-mematikan" sebuah gaya.</p>
+
+  <h3>3. Menampilkan/Menyembunyikan Elemen</h3>
+  <p>
+    Untuk menyembunyikan elemen sepenuhnya (bukan sekadar mengubah warnanya),
+    ubah properti <code>display</code> menjadi <code>"none"</code>, dan kembalikan
+    ke semula (misalnya <code>"block"</code>) untuk menampilkannya lagi:</p>
+  <pre><code>&lt;div id="konten"&gt;Konten yang bisa disembunyikan&lt;/div&gt;
+&lt;button id="btnToggle"&gt;Tampil/Sembunyikan&lt;/button&gt;
+
+&lt;script&gt;
+  document.getElementById("btnToggle").addEventListener("click", function() {
+    const konten = document.getElementById("konten");
+    if (konten.style.display === "none") {
+      konten.style.display = "block";
+    } else {
+      konten.style.display = "none";
+    }
+  });
+&lt;/script&gt;</code></pre>
+
+  <h3>4. Kondisi If/Else untuk Validasi</h3>
+  <p>
+    <code>if/else</code> digunakan untuk menjalankan kode yang berbeda tergantung
+    sebuah kondisi benar atau salah:</p>
+  <pre><code>&lt;input type="number" id="usia" placeholder="Masukkan usia"&gt;
+&lt;button id="btnCek"&gt;Cek&lt;/button&gt;
+&lt;p id="hasil"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+  document.getElementById("btnCek").addEventListener("click", function() {
+    const usia = Number(document.getElementById("usia").value);
+    if (usia &gt;= 17) {
+      document.getElementById("hasil").innerText = "Boleh daftar";
+    } else {
+      document.getElementById("hasil").innerText = "Belum boleh daftar";
+    }
+  });
+&lt;/script&gt;</code></pre>
+  <p>
+    Jangan lupa ubah nilai input (yang berupa teks) menjadi angka dengan
+    <code>Number(...)</code> sebelum dibandingkan — kalau tidak, perbandingan
+    <code>&gt;=</code> bisa memberi hasil yang tidak terduga.</p>
+
+  <h3>5. Perulangan For untuk Membuat Daftar Dinamis</h3>
+  <p>
+    Perulangan <code>for</code> memungkinkan kita menjalankan kode yang sama
+    berkali-kali — misalnya untuk membuat beberapa <code>&lt;li&gt;</code>
+    sekaligus tanpa menulisnya satu per satu:</p>
+  <pre><code>&lt;ul id="daftar"&gt;&lt;/ul&gt;
+
+&lt;script&gt;
+  const daftar = document.getElementById("daftar");
+  for (let i = 1; i &lt;= 5; i++) {
+    const item = document.createElement("li");
+    item.innerText = i;
+    daftar.appendChild(item);
+  }
+&lt;/script&gt;</code></pre>
+  <p>
+    Setiap putaran perulangan membuat satu elemen <code>&lt;li&gt;</code> baru
+    (<code>createElement</code>), mengisi teksnya (<code>innerText</code>), lalu
+    menambahkannya ke dalam <code>&lt;ul&gt;</code> (<code>appendChild</code>).</p>
+
+  <div class="materi-tips">
+    <h3>💡 Tips Sebelum Mengerjakan Soal</h3>
+    <ul>
+      <li>Properti CSS dengan tanda hubung (mis. <code>background-color</code>) ditulis tanpa tanda hubung dan huruf kapital di tengah (<code>backgroundColor</code>) saat diakses lewat JavaScript.</li>
+      <li><code>classList.toggle()</code> lebih rapi dipakai daripada mengatur banyak properti <code>.style</code> satu per satu.</li>
+      <li>Selalu ubah input angka dengan <code>Number(...)</code> sebelum dipakai dalam perbandingan <code>if</code>, supaya tidak salah hasil.</li>
+      <li>Soal terakhir materi ini adalah <strong>Clone Challenge</strong>: membuat daftar tugas (todo list) sederhana menggunakan perulangan <code>for</code>, menggabungkan semua konsep manipulasi DOM yang sudah dipelajari di materi ini.</li>
+    </ul>
+  </div>
+</article>

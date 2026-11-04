@@ -1,0 +1,90 @@
+<article class="materi-content">
+  <h2>Dasar JavaScript — Variabel & Output</h2>
+  <p>
+    JavaScript adalah bahasa pemrograman yang membuat halaman web menjadi
+    <em>interaktif</em> — bisa merespons klik, mengubah tampilan secara dinamis,
+    dan menghitung sesuatu secara langsung di browser. Materi ini membahas
+    dasar-dasar JavaScript: variabel, output, dan fungsi.</p>
+
+  <h3>1. Variabel</h3>
+  <p>
+    Variabel adalah "wadah" untuk menyimpan data. Gunakan <code>let</code> untuk
+    variabel yang nilainya bisa berubah, atau <code>const</code> untuk nilai yang
+    tetap:</p>
+  <pre><code>let nama = "Budi";
+const semester = 3;</code></pre>
+
+  <h3>2. Menampilkan Output ke Halaman</h3>
+  <p>
+    Untuk menampilkan nilai variabel ke dalam elemen HTML, gunakan
+    <code>document.getElementById()</code> untuk "menangkap" elemen tujuan, lalu
+    atur <code>innerText</code>-nya:</p>
+  <pre><code>&lt;p id="output"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+  let nama = "Budi";
+  document.getElementById("output").innerText = nama;
+&lt;/script&gt;</code></pre>
+  <p>
+    Setelah kode ini berjalan, teks "Budi" akan muncul di dalam elemen
+    <code>&lt;p id="output"&gt;</code>.</p>
+
+  <h3>3. Menggabungkan Beberapa Variabel</h3>
+  <p>
+    Variabel bisa digabung menjadi satu kalimat menggunakan tanda plus
+    (<code>+</code>):</p>
+  <pre><code>let nama = "Budi";
+let semester = 3;
+let kalimat = "Nama saya " + nama + ", semester " + semester;
+document.getElementById("output").innerText = kalimat;</code></pre>
+
+  <h3>4. Operator Aritmatika</h3>
+  <p>
+    JavaScript juga bisa melakukan perhitungan matematika langsung dengan operator
+    seperti <code>+</code> (tambah), <code>-</code> (kurang), <code>*</code>
+    (kali), dan <code>/</code> (bagi):</p>
+  <pre><code>let a = 5;
+let b = 3;
+let hasil = a + b;
+document.getElementById("output").innerText = "Hasil: " + hasil;</code></pre>
+
+  <h3>5. Template Literal</h3>
+  <p>
+    Cara yang lebih rapi untuk menggabungkan teks dan variabel adalah dengan
+    <strong>template literal</strong> — tanda kutip backtick (<code>`</code>, bukan
+    kutip biasa) yang memungkinkan variabel disisipkan langsung dengan
+    <code>${}</code>:</p>
+  <pre><code>const nama = "Budi";
+const umur = 20;
+let kalimat = `Nama saya ${nama}, umur ${umur} tahun`;
+document.getElementById("output").innerText = kalimat;</code></pre>
+  <p>
+    Template literal lebih mudah dibaca dibanding menyambung banyak tanda
+    <code>+</code>, terutama kalau variabelnya banyak.</p>
+
+  <h3>6. Fungsi dengan Parameter</h3>
+  <p>
+    Fungsi adalah blok kode yang bisa dipanggil berkali-kali dengan input
+    (parameter) yang berbeda-beda. Fungsi bisa <code>return</code> (mengembalikan)
+    sebuah nilai:</p>
+  <pre><code>function sapa(nama) {
+  return "Halo, " + nama + "!";
+}
+
+document.getElementById("output").innerText = sapa("Budi");</code></pre>
+  <p>
+    Fungsi <code>sapa</code> di atas menerima satu parameter (<code>nama</code>)
+    dan mengembalikan kalimat sapaan. Memanggilnya dengan nama berbeda
+    (<code>sapa("Ani")</code>) akan menghasilkan output yang berbeda pula, tanpa
+    perlu menulis ulang kodenya.</p>
+
+  <div class="materi-tips">
+    <h3>💡 Tips Sebelum Mengerjakan Soal</h3>
+    <ul>
+      <li>Kode JavaScript selalu ditulis di dalam tag <code>&lt;script&gt;&lt;/script&gt;</code>.</li>
+      <li>Setiap baris perintah JavaScript sebaiknya diakhiri titik koma (<code>;</code>) — ini bukan wajib mutlak, tapi praktik yang baik dan menghindari error tak terduga.</li>
+      <li>Template literal memakai tanda backtick <code>`</code> (biasanya di pojok kiri atas keyboard, satu tombol dengan tilde <code>~</code>) — bukan kutip satu (<code>'</code>) atau kutip dua (<code>"</code>).</li>
+      <li>Di soal materi ini kamu akan berlatih mendeklarasikan variabel, menampilkannya ke halaman, menggabungkan variabel, memakai operator aritmatika, template literal, dan terakhir membuat fungsi dengan parameter.</li>
+    </ul>
+  </div>
+</article>

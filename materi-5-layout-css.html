@@ -1,0 +1,122 @@
+<article class="materi-content">
+  <h2>Layout & Interaksi CSS — Flexbox & Hover</h2>
+  <p>
+    Setelah menguasai dasar CSS, sekarang saatnya belajar menata <em>tata letak</em>
+    (layout) beberapa elemen sekaligus, dan membuat tampilan yang merespons
+    interaksi pengguna seperti saat kursor mouse diarahkan ke sebuah elemen
+    (hover).</p>
+
+  <h3>1. Flexbox — Menyusun Elemen Secara Horizontal</h3>
+  <p>
+    Secara default, elemen seperti <code>&lt;div&gt;</code> akan tersusun ke bawah
+    (vertikal) satu per satu. Untuk membuatnya tersusun berdampingan (horizontal),
+    gunakan <code>display: flex</code> pada elemen pembungkusnya:</p>
+  <pre><code>&lt;div class="container"&gt;
+  &lt;div&gt;Box 1&lt;/div&gt;
+  &lt;div&gt;Box 2&lt;/div&gt;
+  &lt;div&gt;Box 3&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+  .container {
+    display: flex;
+  }
+&lt;/style&gt;</code></pre>
+  <p>
+    Dengan <code>display: flex</code> pada <code>.container</code>, ketiga
+    <code>&lt;div&gt;</code> anaknya otomatis tersusun berdampingan dari kiri ke
+    kanan.</p>
+
+  <h3>2. Gap — Jarak Antar Elemen Flex</h3>
+  <p>
+    Supaya elemen-elemen di dalam flex container tidak saling menempel, gunakan
+    properti <code>gap</code>:</p>
+  <pre><code>.container {
+  display: flex;
+  gap: 20px;
+}</code></pre>
+
+  <h3>3. Hover dan Transisi</h3>
+  <p>
+    Pseudo-class <code>:hover</code> digunakan untuk mengubah gaya sebuah elemen
+    saat kursor diarahkan ke atasnya. Agar perubahannya terasa halus (tidak
+    tiba-tiba), tambahkan <code>transition</code>:</p>
+  <pre><code>.btn {
+  background-color: lightblue;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+.btn:hover {
+  background-color: dodgerblue;
+}</code></pre>
+  <p>
+    <code>border-radius</code> membuat sudut elemen jadi melengkung (semakin besar
+    nilainya, semakin bulat). <code>transition: all 0.3s ease;</code> pada state
+    normal (bukan di dalam <code>:hover</code>) memberi tahu browser untuk
+    menganimasikan <em>semua</em> perubahan properti secara halus selama 0,3 detik
+    — termasuk perubahan yang terjadi saat hover.</p>
+
+  <h3>4. Layout Dua Kolom dengan Flexbox</h3>
+  <p>
+    Flexbox juga sering dipakai untuk membuat layout halaman, misalnya sidebar di
+    samping konten utama:</p>
+  <pre><code>&lt;div class="layout"&gt;
+  &lt;aside class="sidebar"&gt;Sidebar&lt;/aside&gt;
+  &lt;main class="content"&gt;Konten Utama&lt;/main&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+  .layout {
+    display: flex;
+  }
+  .sidebar {
+    width: 200px;
+  }
+  .content {
+    flex: 1;
+  }
+&lt;/style&gt;</code></pre>
+  <p>
+    <code>flex: 1</code> pada <code>.content</code> membuatnya mengisi sisa ruang
+    yang tidak dipakai oleh sidebar.</p>
+
+  <h3>5. Kesalahan Umum pada Flexbox dan Hover</h3>
+  <p>
+    Perhatikan potongan kode berikut — terlihat hampir benar, tapi ada masalah
+    yang membuat tampilannya tidak sesuai harapan:</p>
+  <pre><code>&lt;!-- ❌ Salah: display masih "block", flexbox tidak akan bekerja --&gt;
+.card-container {
+  display: block;
+}
+
+&lt;!-- ❌ Kurang: tidak ada transition, jadi perubahan hover terasa patah-patah --&gt;
+.card {
+  padding: 20px;
+  border-radius: 10px;
+}
+.card:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  transform: scale(1.05);
+}
+
+&lt;!-- ✅ Benar --&gt;
+.card-container {
+  display: flex;
+  gap: 16px;
+}
+.card {
+  padding: 20px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}</code></pre>
+
+  <div class="materi-tips">
+    <h3>💡 Tips Sebelum Mengerjakan Soal</h3>
+    <ul>
+      <li><code>display: flex</code> harus ditaruh pada elemen <em>pembungkus</em> (parent), bukan pada elemen yang ingin disusun (child).</li>
+      <li>Kalau efek hover terasa "patah-patah" atau tidak smooth, kemungkinan besar properti <code>transition</code> belum ditambahkan.</li>
+      <li><code>gap</code> hanya berfungsi di dalam elemen yang sudah memakai <code>display: flex</code> (atau <code>grid</code>).</li>
+      <li>Soal terakhir materi ini berbentuk <strong>Bug Hunt</strong> — ada kartu interaktif dengan beberapa masalah (flexbox tidak jalan, hover tidak smooth, shadow tidak muncul) yang perlu kamu temukan dan perbaiki.</li>
+    </ul>
+  </div>
+</article>

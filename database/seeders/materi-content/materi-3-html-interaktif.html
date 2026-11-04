@@ -1,0 +1,91 @@
+<article class="materi-content">
+  <h2>HTML Interaktif — Form & Media</h2>
+  <p>
+    Form adalah cara utama sebuah halaman web menerima masukan dari pengguna —
+    mulai dari kolom login, kotak pencarian, sampai formulir pendaftaran. Materi
+    ini membahas elemen-elemen form dan cara menghubungkannya dengan benar, karena
+    kesalahan kecil (seperti label yang tidak terhubung) adalah bug yang paling
+    sering terjadi di dunia nyata.</p>
+
+  <h3>1. Form dan Input Teks</h3>
+  <pre><code>&lt;form&gt;
+  &lt;input type="text" name="nama"&gt;
+&lt;/form&gt;</code></pre>
+  <p>
+    <code>&lt;form&gt;</code> adalah pembungkus semua elemen input. <code>&lt;input
+    type="text"&gt;</code> adalah kolom isian teks satu baris. Atribut
+    <code>name</code> penting untuk menandai data apa yang dikirim saat form
+    disubmit.</p>
+
+  <h3>2. Select Dropdown</h3>
+  <p>
+    Untuk pilihan dari daftar tertutup (misalnya memilih jurusan), gunakan
+    <code>&lt;select&gt;</code> dengan beberapa <code>&lt;option&gt;</code> di
+    dalamnya:</p>
+  <pre><code>&lt;select name="jurusan"&gt;
+  &lt;option value="ptik"&gt;PTIK&lt;/option&gt;
+  &lt;option value="pti"&gt;PTI&lt;/option&gt;
+  &lt;option value="sipil"&gt;Teknik Sipil&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+
+  <h3>3. Textarea dan Label yang Terhubung</h3>
+  <p>
+    <code>&lt;textarea&gt;</code> dipakai untuk isian teks panjang (multi-baris),
+    seperti kolom pesan. <code>&lt;label&gt;</code> memberi keterangan nama pada
+    sebuah input — tapi supaya benar-benar <em>terhubung</em> (misalnya supaya klik
+    pada label otomatis fokus ke input-nya), atribut <code>for</code> pada label
+    harus sama persis dengan <code>id</code> pada input:</p>
+  <pre><code>&lt;label for="pesan"&gt;Pesan Anda&lt;/label&gt;
+&lt;textarea id="pesan" name="pesan"&gt;&lt;/textarea&gt;</code></pre>
+  <p>
+    Perhatikan: <code>for="pesan"</code> pada label harus cocok dengan
+    <code>id="pesan"</code> pada textarea — bukan dengan <code>name</code>-nya.
+    Ini adalah kesalahan paling umum yang membuat label "tidak nyambung" ke
+    input-nya.</p>
+
+  <h3>4. Gambar dan Tombol Submit</h3>
+  <pre><code>&lt;img src="foto.jpg" alt="Foto profil mahasiswa"&gt;
+&lt;button type="submit"&gt;Kirim&lt;/button&gt;</code></pre>
+  <p>
+    Atribut <code>alt</code> pada <code>&lt;img&gt;</code> wajib diisi dengan teks
+    deskriptif — ini membantu pengguna dengan pembaca layar (<em>screen reader</em>)
+    dan tetap tampil kalau gambar gagal dimuat. <code>&lt;button type="submit"&gt;</code>
+    adalah tombol yang mengirim data form.</p>
+
+  <h3>5. Checkbox dengan Label</h3>
+  <p>
+    Pola yang sama berlaku untuk checkbox — butuh <code>id</code> pada input dan
+    <code>for</code> yang cocok pada label:</p>
+  <pre><code>&lt;input type="checkbox" id="setuju" name="setuju"&gt;
+&lt;label for="setuju"&gt;Saya setuju dengan syarat dan ketentuan&lt;/label&gt;</code></pre>
+
+  <h3>6. Kesalahan Umum yang Sering Terjadi</h3>
+  <p>
+    Perhatikan baik-baik potongan kode form berikut — ada beberapa masalah yang
+    sering luput diperhatikan:</p>
+  <pre><code>&lt;!-- ❌ Salah: label tidak terhubung ke input (tidak ada for/id) --&gt;
+&lt;label&gt;Nama&lt;/label&gt;
+&lt;input type="text" id="nama"&gt;
+
+&lt;!-- ❌ Salah: for dan id tidak sama --&gt;
+&lt;label for="email"&gt;Email&lt;/label&gt;
+&lt;input type="text" id="emailField"&gt;
+
+&lt;!-- ❌ Salah: checkbox tidak punya id, label tidak punya for --&gt;
+&lt;input type="checkbox"&gt;
+&lt;label&gt;Setuju dengan syarat&lt;/label&gt;
+
+&lt;!-- ✅ Benar --&gt;
+&lt;label for="nama"&gt;Nama&lt;/label&gt;
+&lt;input type="text" id="nama"&gt;</code></pre>
+
+  <div class="materi-tips">
+    <h3>💡 Tips Sebelum Mengerjakan Soal</h3>
+    <ul>
+      <li>Selalu cek: nilai <code>for</code> pada label = nilai <code>id</code> pada input yang dituju. Keduanya harus sama persis (termasuk huruf besar/kecil).</li>
+      <li>Setiap elemen input yang ingin dilabeli (text, textarea, checkbox) butuh atribut <code>id</code> sendiri.</li>
+      <li><code>alt</code> pada gambar bukan opsional — selalu isi dengan deskripsi yang jelas.</li>
+      <li>Soal terakhir materi ini berbentuk <strong>Bug Hunt</strong> — kamu akan diberi form yang sudah punya beberapa masalah seperti di atas, dan tugasmu adalah menemukan serta memperbaikinya satu per satu.</li>
+    </ul>
+  </div>
+</article>

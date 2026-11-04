@@ -1,0 +1,91 @@
+/* ═══════════════════════════════════════════════════
+   SPRITE SHEET ANIMATOR
+   ═══════════════════════════════════════════════════ */
+
+.sprite-character {
+    width: 128px;
+    height: 128px;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+/* Idle Animation (6 frames @ 128px each = 768px total) */
+.sprite-character.idle {
+    animation: sprite-idle 0.6s steps(6) infinite;
+}
+
+@keyframes sprite-idle {
+    from { background-position: 0px 0; }
+    to { background-position: -768px 0; }
+}
+
+/* Walk/Typing Animation (8 frames @ 128px each = 1024px total) */
+.sprite-character.typing {
+    animation: sprite-walk 0.8s steps(8) infinite;
+}
+
+@keyframes sprite-walk {
+    from { background-position: 0px 0; }
+    to { background-position: -1024px 0; }
+}
+
+/* Attack/Thinking Animation (varies, usually 4-6 frames) */
+.sprite-character.thinking {
+    animation: sprite-attack 0.5s steps(6) infinite;
+}
+
+@keyframes sprite-attack {
+    from { background-position: 0px 0; }
+    to { background-position: -768px 0; }
+}
+
+/* Run/Success Animation (8 frames) */
+.sprite-character.success {
+    animation: sprite-run 0.6s steps(8) 3;
+}
+
+@keyframes sprite-run {
+    from { background-position: 0px 0; }
+    to { background-position: -1024px 0; }
+}
+
+/* Hurt/Error Animation (varies, usually 3 frames @ 128px = 384px) */
+.sprite-character.error {
+    animation: sprite-hurt 0.3s steps(3) 2;
+}
+
+@keyframes sprite-hurt {
+    from { background-position: 0px 0; }
+    to { background-position: -384px 0; }
+}
+
+/* Responsive sizes */
+@media (max-width: 768px) {
+    .sprite-character {
+        width: 96px;
+        height: 96px;
+    }
+}
+
+/* Character companion specific */
+.character-companion .sprite-character {
+    width: 120px;
+    height: 120px;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+}
+
+@media (max-width: 768px) {
+    .character-companion .sprite-character {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* Costume preview specific */
+.costume-preview .sprite-character {
+    width: 100px;
+    height: 100px;
+}

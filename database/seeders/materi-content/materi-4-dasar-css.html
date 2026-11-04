@@ -1,0 +1,97 @@
+<article class="materi-content">
+  <h2>Dasar CSS — Selector & Properti</h2>
+  <p>
+    Kalau HTML adalah kerangka halaman, <strong>CSS (Cascading Style Sheets)</strong>
+    adalah yang membuatnya tampil cantik — warna, ukuran teks, jarak antar elemen,
+    dan seterusnya. Materi ini membahas tiga jenis selector dasar dan properti yang
+    paling sering dipakai.</p>
+
+  <h3>1. Cara Menulis CSS</h3>
+  <p>
+    CSS ditulis di dalam tag <code>&lt;style&gt;</code> (biasanya diletakkan di
+    dalam <code>&lt;head&gt;</code>), dengan pola <code>selector { properti: nilai; }</code>:</p>
+  <pre><code>&lt;style&gt;
+  h1 {
+    color: blue;
+  }
+&lt;/style&gt;</code></pre>
+
+  <h3>2. Selector Tag</h3>
+  <p>
+    Selector tag menargetkan <em>semua</em> elemen dengan nama tag tertentu. Contoh
+    di atas (<code>h1 { color: blue; }</code>) akan membuat <strong>semua</strong>
+    <code>&lt;h1&gt;</code> di halaman menjadi biru.</p>
+
+  <h3>3. Selector Class</h3>
+  <p>
+    Kalau kamu hanya ingin menata elemen <em>tertentu</em> (tidak semua), gunakan
+    class. Beri atribut <code>class</code> pada elemen HTML, lalu di CSS targetkan
+    dengan tanda titik (<code>.</code>) di depan nama class:</p>
+  <pre><code>&lt;p class="besar"&gt;Teks ini akan besar&lt;/p&gt;
+
+&lt;style&gt;
+  .besar {
+    font-size: 18px;
+  }
+&lt;/style&gt;</code></pre>
+  <p>
+    Satu class bisa dipakai di banyak elemen sekaligus — cocok untuk gaya yang
+    ingin diulang di beberapa tempat.</p>
+
+  <h3>4. Selector Id</h3>
+  <p>
+    Id menargetkan <strong>satu elemen spesifik</strong> saja (id harus unik dalam
+    satu halaman). Ditandai dengan tanda pagar (<code>#</code>) di CSS:</p>
+  <pre><code>&lt;div id="kotak"&gt;Kotak berwarna&lt;/div&gt;
+
+&lt;style&gt;
+  #kotak {
+    background-color: lightblue;
+  }
+&lt;/style&gt;</code></pre>
+
+  <h3>5. Padding dan Margin</h3>
+  <p>
+    <code>padding</code> adalah jarak di <em>dalam</em> elemen (antara tepi elemen
+    dan isinya), sedangkan <code>margin</code> adalah jarak di <em>luar</em> elemen
+    (antara elemen itu dan elemen lain di sekitarnya):</p>
+  <pre><code>.kartu {
+  padding: 20px;
+  margin: 10px;
+}</code></pre>
+  <p>
+    Bayangkan <code>padding</code> seperti bantalan di dalam kotak, dan
+    <code>margin</code> seperti jarak antar kotak-kotak yang berdekatan.</p>
+
+  <h3>6. Menggabungkan Beberapa Selector dalam Satu Stylesheet</h3>
+  <p>
+    Dalam praktik nyata, satu halaman biasanya memakai kombinasi ketiga jenis
+    selector sekaligus, masing-masing untuk kebutuhan berbeda:</p>
+  <pre><code>&lt;style&gt;
+  h1 {
+    color: darkblue;
+  }
+  .intro {
+    font-size: 16px;
+    color: gray;
+  }
+  #footer {
+    background-color: #eeeeee;
+    padding: 10px;
+  }
+&lt;/style&gt;
+
+&lt;h1&gt;Judul Halaman&lt;/h1&gt;
+&lt;p class="intro"&gt;Paragraf intro&lt;/p&gt;
+&lt;div id="footer"&gt;Footer halaman&lt;/div&gt;</code></pre>
+
+  <div class="materi-tips">
+    <h3>💡 Tips Sebelum Mengerjakan Soal</h3>
+    <ul>
+      <li>Urutan prioritas: id lebih "kuat" dari class, dan class lebih "kuat" dari tag — kalau dua aturan bentrok pada elemen yang sama, yang lebih spesifik akan menang.</li>
+      <li>Jangan lupa titik dua (<code>:</code>) setelah nama properti dan titik koma (<code>;</code>) setelah nilai — ini kesalahan sintaks paling umum di CSS.</li>
+      <li>Nama class dan id ditulis tanpa spasi; gunakan tanda hubung (mis. <code>nama-kelas</code>) kalau butuh lebih dari satu kata.</li>
+      <li>Di soal materi ini kamu akan berlatih mengubah warna teks, ukuran font, background, padding/margin, dan terakhir menggabungkan ketiga jenis selector dalam satu halaman.</li>
+    </ul>
+  </div>
+</article>

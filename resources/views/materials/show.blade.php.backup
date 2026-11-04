@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ $material['title'] }} — CodeTide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/mobile-responsive.css') }}">
+    
+    <!-- Highlight.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --cyan: #53EAFD;
+            --purple: #ED6AFF;
+            --yellow: #FFDF20;
+            --green: #7BF1A8;
+            --bg: #040D1A;
+            --bg2: #091326;
+            --border: rgba(83, 234, 253, 0.15);
+            --text: #E8F4FF;
+            --muted: rgba(232, 244, 255, 0.55);
+            --ff-pixel: 'Press Start 2P', monospace;
+            --ff-code: 'JetBrains Mono', monospace;
+            --sp-2: 8px;
+            --sp-3: 12px;
+            --sp-4: 16px;
+            --sp-5: 24px;
+            --sp-6: 32px;
+            --sp-8: 48px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--ff-code);
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0 !important;
+        }
+
+        .page-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── NAVBAR ───────────────────────────────────── */
+        .lp-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(4, 13, 26, 0.85);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            transition: all 0.3s;
+        }
+
+        .lp-nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            height: 64px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .lp-logo {
+            font-family: var(--ff-pixel);
+            font-size: 0.75rem;
+            color: var(--purple);
+            text-decoration: none;
+            text-shadow: 0 0 16px rgba(237, 106, 255, 0.5);
+            letter-spacing: 0.05em;
+        }
+
+        .lp-logo .bracket { color: var(--cyan); }
+
+        .lp-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .lp-nav-links a, .lp-nav-links button {
+            font-family: var(--ff-pixel);
+            font-size: 0.5rem;
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            transition: all 0.15s;
+            background: transparent;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .lp-nav-links a:hover, .lp-nav-links button:hover {
+            color: var(--cyan);
+            border-color: var(--cyan);
+            transform: translateY(-1px);
+        }
+
+        .lp-nav-links .btn-logout {
+            color: #FF6B6B;
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        /* ── MATERIAL CONTAINER ─────────────────────── */
+        .material-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 96px 32px 60px;
+        }
+
+        /* ── BREADCRUMB ──────────────────────────────── */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: var(--sp-2);
+            margin-bottom: var(--sp-5);
+            font-size: 0.8rem;
+        }
+
+        .breadcrumb a {
+            color: var(--cyan);
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .breadcrumb a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .breadcrumb .separator {
+            color: var(--muted);
+        }
+
+        .breadcrumb .current {
+            color: var(--muted);
+        }
+
+        /* ── HEADER ──────────────────────────────────── */
+        .material-header {
+            text-align: center;
+            margin-bottom: var(--sp-8);
+        }
+
+        .header-icons {
+            display: flex;
+            justify-content: center;
+            gap: var(--sp-4);
+            margin-bottom: var(--sp-4);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .material-header h1 {
+            font-family: var(--ff-pixel);
+            font-size: 1.5rem;
+            color: var(--cyan);
+            margin-bottom: var(--sp-3);
+            line-height: 1.6;
+        }
+
+        .material-header .description {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ── QUESTIONS GRID ──────────────────────────── */
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--sp-5);
+            margin-bottom: var(--sp-8);
+        }
+
+        /* ── QUESTION NODE ───────────────────────────── */
+        .question-node {
+            background: rgba(9, 19, 38, 0.6);
+            border: 2px solid var(--border);
+            padding: var(--sp-6) var(--sp-4) var(--sp-4);
+            position: relative;
+            min-height: 140px;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+        }
+
+        .question-node:hover {
+            border-color: var(--cyan);
+            box-shadow: 8px 8px 0 rgba(83, 234, 253, 0.1);
+            transform: translate(-2px, -2px);
+        }
+
+        .question-node.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: rgba(128, 128, 128, 0.3);
+        }
+
+        .question-node.locked:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: rgba(128, 128, 128, 0.3);
+        }
+
+        .question-node.complete {
+            border-color: var(--green);
+            background: rgba(123, 241, 168, 0.05);
+        }
+
+        .question-node.active {
+            border-color: var(--yellow);
+            background: rgba(255, 223, 32, 0.05);
+        }
+
+        /* Node icon at top */
+        .node-pxl-icon {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .node-number {
+            font-family: var(--ff-pixel);
+            font-size: 0.65rem;
+            color: var(--text);
+            text-align: center;
+            margin-bottom: var(--sp-2);
+        }
+
+        .node-title {
+            font-size: 0.85rem;
+            color: var(--muted);
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .node-xp {
+            font-family: var(--ff-pixel);
+            font-size: 0.5rem;
+            color: var(--yellow);
+            text-align: center;
+            margin-top: var(--sp-3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--sp-2);
+        }
+
+        /* ── BACK BUTTON ─────────────────────────────── */
+        .back-section {
+            text-align: center;
+        }
+
+        .btn-back {
+            font-family: var(--ff-pixel);
+            font-size: 0.5rem;
+            padding: 12px 24px;
+            border: 1px solid var(--border);
+            color: var(--text);
+            text-decoration: none;
+            background: transparent;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-back:hover {
+            color: var(--cyan);
+            border-color: var(--cyan);
+            transform: translateY(-2px);
+        }
+
+        /* ── LEARN MATERIAL SECTION ──────────────── */
+        .learn-material-section {
+            margin-bottom: var(--sp-8);
+        }
+
+        .learn-card {
+            background: linear-gradient(135deg, rgba(83, 234, 253, 0.1), rgba(237, 106, 255, 0.1));
+            border: 2px solid var(--cyan);
+            padding: var(--sp-6);
+            display: flex;
+            align-items: center;
+            gap: var(--sp-5);
+            transition: all 0.3s;
+        }
+
+        .learn-card:hover {
+            border-color: var(--purple);
+            box-shadow: 0 8px 24px rgba(83, 234, 253, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .learn-icon {
+            flex-shrink: 0;
+        }
+
+        .learn-info {
+            flex: 1;
+        }
+
+        .learn-info h3 {
+            font-family: var(--ff-pixel);
+            font-size: 0.85rem;
+            color: var(--cyan);
+            margin-bottom: var(--sp-2);
+        }
+
+        .learn-info p {
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-bottom: var(--sp-3);
+        }
+
+        .learn-time {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--sp-2);
+            background: rgba(255, 223, 32, 0.1);
+            padding: 4px 12px;
+            border: 1px solid rgba(255, 223, 32, 0.3);
+            font-size: 0.75rem;
+            color: var(--yellow);
+        }
+
+        .btn-open-material {
+            flex-shrink: 0;
+            font-family: var(--ff-pixel);
+            font-size: 0.6rem;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            color: var(--bg);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px 12px rgba(83, 234, 253, 0.3);
+        }
+
+        .btn-open-material:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(83, 234, 253, 0.5);
+        }
+
+        .btn-open-material:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        /* ── MODAL ──────────────────────────────────── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(4, 13, 26, 0.95);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            padding: var(--sp-4);
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 40px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-container {
+            background: var(--bg2);
+            border: 2px solid var(--border);
+            max-width: 1000px;
+            width: 100%;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--sp-5);
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(83, 234, 253, 0.05), rgba(237, 106, 255, 0.05));
+        }
+
+        .modal-title {
+            display: flex;
+            align-items: center;
+            gap: var(--sp-3);
+        }
+
+        .modal-title h2 {
+            font-family: var(--ff-pixel);
+            font-size: 0.85rem;
+            color: var(--cyan);
+            margin: 0;
+        }
+
+        .btn-close-modal {
+            background: transparent;
+            border: 1px solid var(--border);
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-close-modal:hover {
+            border-color: var(--cyan);
+            background: rgba(83, 234, 253, 0.1);
+        }
+
+        .modal-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--sp-6);
+        }
+
+        .modal-footer {
+            padding: var(--sp-5);
+            border-top: 1px solid var(--border);
+            text-align: center;
+            background: rgba(9, 19, 38, 0.6);
+        }
+
+        .btn-modal-close {
+            font-family: var(--ff-pixel);
+            font-size: 0.6rem;
+            padding: 12px 32px;
+            background: linear-gradient(135deg, var(--green), var(--cyan));
+            color: var(--bg);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-modal-close:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(123, 241, 168, 0.4);
+        }
+
+        /* ── CONTENT VIEWER (inside modal) ─────────── */
+        .content-viewer {
+            padding: var(--sp-6) var(--sp-6);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .content-viewer h1 {
+            font-family: var(--ff-pixel);
+            font-size: 1.3rem;
+            color: var(--purple);
+            margin: var(--sp-6) 0 var(--sp-4);
+            line-height: 1.5;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: var(--sp-3);
+        }
+
+        .content-viewer h1:first-child {
+            margin-top: 0;
+        }
+
+        .content-viewer h2 {
+            font-family: var(--ff-pixel);
+            font-size: 1rem;
+            color: var(--cyan);
+            margin: var(--sp-5) 0 var(--sp-3);
+            line-height: 1.5;
+        }
+
+        .content-viewer h3 {
+            font-family: var(--ff-code);
+            font-size: 0.95rem;
+            color: var(--green);
+            margin: var(--sp-4) 0 var(--sp-3);
+            font-weight: bold;
+        }
+
+        .content-viewer h4 {
+            font-size: 0.9rem;
+            color: var(--yellow);
+            margin: var(--sp-3) 0 var(--sp-2);
+            font-weight: bold;
+        }
+
+        .content-viewer p {
+            margin: var(--sp-3) 0;
+            line-height: 1.8;
+            color: var(--text);
+        }
+
+        .content-viewer strong {
+            color: var(--cyan);
+            font-weight: bold;
+        }
+
+        .content-viewer em {
+            color: var(--purple);
+            font-style: italic;
+        }
+
+        .content-viewer a {
+            color: var(--cyan);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--cyan);
+            transition: all 0.3s;
+        }
+
+        .content-viewer a:hover {
+            color: var(--purple);
+            border-bottom-color: var(--purple);
+        }
+
+        /* Lists */
+        .content-viewer ul, .content-viewer ol {
+            margin: var(--sp-3) 0 var(--sp-3) var(--sp-5);
+            line-height: 1.8;
+        }
+
+        .content-viewer li {
+            margin: var(--sp-2) 0;
+            color: var(--text);
+        }
+
+        .content-viewer ul li::marker {
+            color: var(--cyan);
+        }
+
+        .content-viewer ol li::marker {
+            color: var(--purple);
+            font-weight: bold;
+        }
+
+        /* Code blocks */
+        .content-viewer code {
+            background: rgba(83, 234, 253, 0.1);
+            color: var(--cyan);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: var(--ff-code);
+            font-size: 0.85em;
+            border: 1px solid rgba(83, 234, 253, 0.2);
+        }
+
+        .content-viewer pre {
+            background: rgba(4, 13, 26, 0.8);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--cyan);
+            padding: var(--sp-4);
+            margin: var(--sp-4) 0;
+            overflow-x: auto;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .content-viewer pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            color: var(--text);
+            display: block;
+            line-height: 1.6;
+            font-size: 0.85rem;
+        }
+
+        /* Override highlight.js colors to match our theme */
+        .content-viewer pre code.hljs {
+            background: transparent;
+            padding: 0;
+        }
+
+        .hljs-comment { color: var(--muted) !important; }
+        .hljs-keyword, .hljs-selector-tag, .hljs-literal { color: var(--purple) !important; }
+        .hljs-string, .hljs-attr { color: var(--green) !important; }
+        .hljs-number { color: var(--yellow) !important; }
+        .hljs-function, .hljs-title { color: var(--cyan) !important; }
+        .hljs-tag { color: var(--text) !important; }
+        .hljs-name { color: var(--purple) !important; }
+        .hljs-attribute { color: var(--cyan) !important; }
+
+        /* Tables */
+        .content-viewer table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--sp-4) 0;
+            background: rgba(9, 19, 38, 0.4);
+            border: 1px solid var(--border);
+        }
+
+        .content-viewer th {
+            background: rgba(83, 234, 253, 0.1);
+            color: var(--cyan);
+            font-family: var(--ff-pixel);
+            font-size: 0.65rem;
+            padding: var(--sp-3);
+            text-align: left;
+            border: 1px solid var(--border);
+        }
+
+        .content-viewer td {
+            padding: var(--sp-3);
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .content-viewer tr:hover {
+            background: rgba(83, 234, 253, 0.05);
+        }
+
+        /* Blockquotes */
+        .content-viewer blockquote {
+            border-left: 4px solid var(--yellow);
+            background: rgba(255, 223, 32, 0.05);
+            padding: var(--sp-4);
+            margin: var(--sp-4) 0;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        /* Horizontal Rule */
+        .content-viewer hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: var(--sp-6) 0;
+        }
+
+        /* Images */
+        .content-viewer img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            margin: var(--sp-4) 0;
+        }
+
+        /* ── RESPONSIVE ──────────────────────────────── */
+        @media (max-width: 768px) {
+            .material-container {
+                padding: 96px 16px 40px;
+            }
+
+            .questions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .material-header h1 {
+                font-size: 1.2rem;
+            }
+
+            .learn-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .learn-info {
+                text-align: center;
+            }
+
+            .btn-open-material {
+                width: 100%;
+            }
+
+            .modal-container {
+                max-height: 95vh;
+            }
+
+            .modal-content {
+                padding: var(--sp-4);
+            }
+
+            .content-viewer {
+                padding: 0;
+            }
+
+            .content-viewer h1 {
+                font-size: 1.1rem;
+            }
+
+            .content-viewer h2 {
+                font-size: 0.9rem;
+            }
+
+            .content-viewer pre {
+                padding: var(--sp-3);
+                font-size: 0.75rem;
+            }
+
+            .content-viewer table {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="page-content">
+        
+        <!-- Navbar -->
+        <nav class="lp-nav">
+            <div class="lp-nav-inner">
+                <a href="{{ route('dashboard') }}" class="lp-logo">
+                    <span class="bracket">&lt;</span>Code<span style="color:var(--cyan)">/</span>Tide<span class="bracket">&gt;</span>
+                </a>
+                <div class="lp-nav-links">
+                    <a href="{{ route('dashboard') }}">Dashboard</a>
+                    <a href="{{ route('modules.index') }}">Materi</a>
+                    <a href="{{ route('leaderboard.index') }}">Leaderboard</a>
+                    <a href="{{ route('costumes.index') }}">Kostumisasi</a>
+                    <div style="width: 1px; height: 20px; background: var(--border);"></div>
+                    <span style="color: var(--text); font-family: var(--ff-pixel); font-size: 0.5rem; padding: 0 8px;">{{ auth()->user()->nickname }}</span>
+                    <form method="POST" action="{{ route('logout') }}" style="display: inline; margin: 0;">
+                        @csrf
+                        <button type="submit" class="btn-logout">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Material Container -->
+        <main class="material-container">
+            
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="{{ route('modules.index') }}">← Materi</a>
+                <span class="separator">/</span>
+                <span class="current">{{ $material['module_title'] }}</span>
+                <span class="separator">/</span>
+                <span class="current">{{ $material['title'] }}</span>
+            </div>
+
+            <!-- Header -->
+            <div class="material-header">
+                <div class="header-icons">
+                    <span data-pxl-icon="star" data-pxl-scale="3" style="animation: float 2.5s ease-in-out infinite;"></span>
+                    <span data-pxl-icon="lightning" data-pxl-scale="3" style="animation: float 2.5s ease-in-out 0.3s infinite;"></span>
+                    <span data-pxl-icon="star" data-pxl-scale="3" style="animation: float 2.5s ease-in-out 0.6s infinite;"></span>
+                </div>
+                <h1>{{ $material['title'] }}</h1>
+                <p class="description">{{ $material['description'] }}</p>
+            </div>
+
+            @if(isset($material['content_html']) && $material['content_html'])
+            <!-- Learn Material Button -->
+            <div class="learn-material-section">
+                <div class="learn-card">
+                    <div class="learn-icon">
+                        <span data-pxl-icon="book" data-pxl-scale="4"></span>
+                    </div>
+                    <div class="learn-info">
+                        <h3>📚 Materi Pembelajaran Tersedia</h3>
+                        <p>Pelajari materi terlebih dahulu sebelum mengerjakan soal</p>
+                        @if(isset($material['estimated_time']) && $material['estimated_time'])
+                        <div class="learn-time">
+                            <span data-pxl-icon="clock" data-pxl-scale="2"></span>
+                            <span>{{ $material['estimated_time'] }} menit</span>
+                        </div>
+                        @endif
+                    </div>
+                    <button class="btn-open-material" onclick="openMaterialModal()">
+                        Buka Materi
+                    </button>
+                </div>
+            </div>
+            @endif
+
+            <!-- Questions Grid -->
+            <div class="questions-grid">
+                @foreach($material['questions'] as $question)
+                <div class="question-node {{ !$question['is_unlocked'] ? 'locked' : ($question['is_completed'] ? 'complete' : 'active') }}"
+                     @if($question['is_unlocked'])
+                         onclick="window.location.href='{{ route('questions.show', $question['id']) }}'"
+                     @endif>
+                    
+                    <!-- Icon at top -->
+                    <div class="node-pxl-icon">
+                        <span data-pxl-icon="{{ !$question['is_unlocked'] ? 'lock' : ($question['is_completed'] ? 'check' : 'play') }}" data-pxl-scale="3"></span>
+                    </div>
+
+                    <div class="node-number">Soal {{ $question['order'] }}</div>
+                    <div class="node-title">{{ $question['title'] }}</div>
+                    <div class="node-xp">
+                        <span data-pxl-icon="coin" data-pxl-scale="1.5"></span>
+                        <span>{{ $question['xp_reward'] }} XP</span>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+
+            <!-- Back Button -->
+            <div class="back-section">
+                <a href="{{ route('modules.index') }}" class="btn-back">
+                    ← Kembali ke Materi
+                </a>
+            </div>
+
+        </main>
+
+    </div>
+
+    @if(isset($material['content_html']) && $material['content_html'])
+    <!-- Material Modal -->
+    <div id="materialModal" class="modal-overlay" onclick="closeMaterialModal()">
+        <div class="modal-container" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span data-pxl-icon="book" data-pxl-scale="3"></span>
+                    <h2>{{ $material['title'] }}</h2>
+                </div>
+                <button class="btn-close-modal" onclick="closeMaterialModal()">
+                    <span data-pxl-icon="close" data-pxl-scale="2"></span>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="content-viewer">
+                    {!! $material['content_html'] !!}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal-close" onclick="closeMaterialModal()">
+                    Tutup & Mulai Soal
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <script src="{{ asset('js/pxlkit-renderer.js') }}"></script>
+    <script src="{{ asset('js/scene3d.js') }}"></script>
+    <script>
+        // PxlKit Icon Map
+        const PXL_MAP = {
+            star:     () => typeof PXL_SPARKLE_STAR  !== 'undefined' ? PXL_SPARKLE_STAR  : null,
+            lightning:() => typeof PXL_LIGHTNING     !== 'undefined' ? PXL_LIGHTNING     : null,
+            lock:     () => typeof PXL_LOCK          !== 'undefined' ? PXL_LOCK          : null,
+            check:    () => typeof PXL_CHECK         !== 'undefined' ? PXL_CHECK         : null,
+            play:     () => typeof PXL_PLAY          !== 'undefined' ? PXL_PLAY          : null,
+            coin:     () => typeof PXL_COIN          !== 'undefined' ? PXL_COIN          : null,
+            book:     () => typeof PXL_BOOK          !== 'undefined' ? PXL_BOOK          : null,
+            clock:    () => typeof PXL_CLOCK         !== 'undefined' ? PXL_CLOCK         : null,
+            close:    () => typeof PXL_CHECK         !== 'undefined' ? PXL_CHECK         : null, // Reuse check for close
+        };
+
+        // Modal Functions
+        function openMaterialModal() {
+            const modal = document.getElementById('materialModal');
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent background scroll
+            }
+        }
+
+        function closeMaterialModal() {
+            const modal = document.getElementById('materialModal');
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = ''; // Restore scroll
+            }
+        }
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMaterialModal();
+            }
+        });
+
+        // Inject PxlKit Icons
+        function injectPxlIcons() {
+            if (typeof PXLKIT === 'undefined') {
+                setTimeout(injectPxlIcons, 100);
+                return;
+            }
+
+            document.querySelectorAll('[data-pxl-icon]:not([data-pxl-done])').forEach(el => {
+                const name  = el.dataset.pxlIcon;
+                const scale = parseInt(el.dataset.pxlScale || '2', 10);
+                const getter = PXL_MAP[name];
+                
+                if (!getter) return;
+                
+                const data = getter();
+                if (!data) return;
+                
+                el.innerHTML = '';
+                el.appendChild(PXLKIT.render(data, scale));
+                el.dataset.pxlDone = '1';
+            });
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize syntax highlighting
+            if (typeof hljs !== 'undefined') {
+                document.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+            }
+            
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    injectPxlIcons();
+                });
+            });
+        });
+
+        // Subtle hover tilt for active nodes
+        document.querySelectorAll('.question-node.active').forEach(node => {
+            node.addEventListener('mousemove', (e) => {
+                const rect = node.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                
+                node.style.transform = `translate(-3px, -3px) perspective(300px) rotateX(${-y * 4}deg) rotateY(${x * 4}deg)`;
+            });
+            
+            node.addEventListener('mouseleave', () => {
+                node.style.transform = '';
+            });
+        });
+    </script>
+</body>
+</html>
