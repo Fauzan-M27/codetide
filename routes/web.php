@@ -8,6 +8,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\CostumeController;
+use App\Http\Controllers\TutorialController;
 use Illuminate\Support\Facades\Route;
 
 // Landing page
@@ -54,6 +55,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Tutorial
+    Route::post('/api/tutorial/complete', [TutorialController::class, 'complete'])->name('tutorial.complete');
+    Route::post('/api/tutorial/reset', [TutorialController::class, 'reset'])->name('tutorial.reset');
+    Route::get('/api/tutorial/status', [TutorialController::class, 'status'])->name('tutorial.status');
 });
 
 require __DIR__.'/auth.php';

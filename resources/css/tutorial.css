@@ -1,0 +1,392 @@
+/**
+ * CodeTide Tutorial Styles
+ * Custom styling untuk Shepherd.js tour — Enhanced Edition
+ */
+
+/* ── SHEPHERD BASE THEME ─────────────────────────── */
+.codetide-shepherd-theme {
+    background: rgba(9, 19, 38, 0.98) !important;
+    border: 2px solid rgba(83, 234, 253, 0.45) !important;
+    border-radius: 0 !important;
+    box-shadow: 0 16px 56px rgba(0, 0, 0, 0.6),
+                0 0 40px rgba(83, 234, 253, 0.18) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    max-width: 440px;
+    font-family: 'JetBrains Mono', monospace;
+    z-index: 9999 !important;
+    animation: shepherd-slide-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Top rainbow bar */
+.codetide-shepherd-theme::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ED6AFF, #53EAFD, #FFDF20, #7BF1A8);
+    background-size: 200% 100%;
+    animation: rainbow-shift 4s linear infinite;
+}
+
+@keyframes rainbow-shift {
+    0%   { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+}
+
+@keyframes shepherd-slide-in {
+    from { opacity: 0; transform: scale(0.93) translateY(12px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── HEADER ──────────────────────────────────────── */
+.codetide-shepherd-theme .shepherd-header {
+    background: transparent !important;
+    padding: 20px 24px 0 !important;
+    align-items: flex-start;
+}
+
+.codetide-shepherd-theme .shepherd-title {
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 0.6rem !important;
+    color: #53EAFD !important;
+    text-shadow: 0 0 12px rgba(83, 234, 253, 0.5);
+    letter-spacing: 0.08em;
+}
+
+.codetide-shepherd-theme .shepherd-cancel-icon {
+    color: rgba(232, 244, 255, 0.4) !important;
+    transition: all 0.2s;
+    font-size: 1.1rem;
+}
+.codetide-shepherd-theme .shepherd-cancel-icon:hover {
+    color: #FF6B6B !important;
+    transform: scale(1.15) rotate(90deg);
+}
+
+/* ── CONTENT ─────────────────────────────────────── */
+.codetide-shepherd-theme .shepherd-text {
+    padding: 20px 24px !important;
+    color: #E8F4FF !important;
+    font-size: 0.875rem;
+    line-height: 1.7;
+}
+
+/* Tutorial card body */
+.tutorial-content {
+    text-align: center;
+}
+
+/* Floating pixel icon */
+.tutorial-icon {
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: tutorial-icon-float 3s ease-in-out infinite;
+}
+.tutorial-icon canvas {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+@keyframes tutorial-icon-float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    33%  { transform: translateY(-8px) rotate(-2deg); }
+    66%  { transform: translateY(-4px) rotate(2deg); }
+}
+
+/* Emoji fallback icon */
+.tutorial-emoji {
+    font-size: 2.4rem;
+    display: block;
+    margin-bottom: 14px;
+    animation: tutorial-icon-float 3s ease-in-out infinite;
+    line-height: 1;
+}
+
+.tutorial-content h3 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.72rem;
+    color: #53EAFD;
+    margin-bottom: 12px;
+    line-height: 1.6;
+    text-shadow: 0 0 16px rgba(83, 234, 253, 0.4);
+}
+
+.tutorial-content p {
+    margin-bottom: 0;
+    color: rgba(232, 244, 255, 0.85);
+    font-size: 0.82rem;
+    line-height: 1.65;
+}
+.tutorial-content p + p { margin-top: 10px; }
+
+.tutorial-content strong { color: #FFDF20; font-weight: 700; }
+.tutorial-content .highlight-green { color: #7BF1A8; }
+.tutorial-content .highlight-purple { color: #ED6AFF; }
+
+/* Tip box */
+.tutorial-tip {
+    margin-top: 14px;
+    padding: 10px 14px;
+    background: rgba(83, 234, 253, 0.07);
+    border: 1px solid rgba(83, 234, 253, 0.2);
+    border-left: 3px solid #53EAFD;
+    text-align: left;
+    font-size: 0.75rem;
+    color: rgba(232, 244, 255, 0.7);
+    line-height: 1.55;
+}
+.tutorial-tip::before {
+    content: '💡 ';
+}
+
+/* Step dots progress */
+.tutorial-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 16px;
+    margin-bottom: 2px;
+}
+.tutorial-dot {
+    width: 7px; height: 7px;
+    background: rgba(83, 234, 253, 0.2);
+    border: 1px solid rgba(83, 234, 253, 0.3);
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+.tutorial-dot.active {
+    background: #53EAFD;
+    box-shadow: 0 0 8px rgba(83, 234, 253, 0.6);
+    transform: scale(1.3);
+}
+.tutorial-dot.done {
+    background: rgba(123, 241, 168, 0.5);
+    border-color: #7BF1A8;
+}
+
+/* Step counter badge */
+.tutorial-step-badge {
+    display: inline-block;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.38rem;
+    color: rgba(83, 234, 253, 0.65);
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+    padding: 3px 8px;
+    border: 1px solid rgba(83, 234, 253, 0.2);
+    background: rgba(83, 234, 253, 0.05);
+}
+
+/* Feature list inside tutorial */
+.tutorial-features {
+    list-style: none;
+    text-align: left;
+    margin: 12px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+.tutorial-features li {
+    font-size: 0.78rem;
+    color: rgba(232, 244, 255, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.tutorial-features li::before {
+    content: '▸';
+    color: #53EAFD;
+    flex-shrink: 0;
+}
+
+/* ── FOOTER / BUTTONS ────────────────────────────── */
+.codetide-shepherd-theme .shepherd-footer {
+    background: transparent !important;
+    padding: 0 24px 22px !important;
+    border-top: 1px solid rgba(83, 234, 253, 0.12) !important;
+    margin-top: 16px;
+    padding-top: 16px !important;
+    gap: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.codetide-shepherd-theme .shepherd-button {
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 0.42rem !important;
+    padding: 10px 18px !important;
+    border: 1px solid #53EAFD !important;
+    background: #53EAFD !important;
+    color: #000 !important;
+    border-radius: 0 !important;
+    cursor: pointer;
+    transition: all 0.18s;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.codetide-shepherd-theme .shepherd-button:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 rgba(83, 234, 253, 0.35);
+}
+.codetide-shepherd-theme .shepherd-button:active {
+    transform: translate(0, 0);
+    box-shadow: none;
+}
+
+/* Finish / complete button — purple accent */
+.codetide-shepherd-theme .shepherd-button.btn-finish {
+    background: linear-gradient(90deg, #ED6AFF, #53EAFD) !important;
+    border-color: #ED6AFF !important;
+}
+.codetide-shepherd-theme .shepherd-button.btn-finish:hover {
+    box-shadow: 4px 4px 0 rgba(237, 106, 255, 0.35);
+}
+
+/* Secondary / back button */
+.codetide-shepherd-theme .shepherd-button-secondary {
+    background: transparent !important;
+    color: rgba(232, 244, 255, 0.6) !important;
+    border-color: rgba(83, 234, 253, 0.25) !important;
+}
+.codetide-shepherd-theme .shepherd-button-secondary:hover {
+    color: #53EAFD !important;
+    border-color: rgba(83, 234, 253, 0.6) !important;
+    background: rgba(83, 234, 253, 0.05) !important;
+    box-shadow: none;
+    transform: translateY(-1px);
+}
+
+/* ── SHEPHERD ARROW ──────────────────────────────── */
+.shepherd-arrow { display: block !important; }
+.shepherd-arrow::before {
+    background: rgba(9, 19, 38, 0.98) !important;
+    border: 2px solid rgba(83, 234, 253, 0.4) !important;
+    width: 16px !important;
+    height: 16px !important;
+    box-shadow: 0 0 12px rgba(83, 234, 253, 0.3);
+}
+
+/* ── MODAL OVERLAY ───────────────────────────────── */
+.shepherd-modal-overlay-container {
+    background: rgba(4, 13, 26, 0.88) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+.shepherd-modal-is-visible .shepherd-target {
+    position: relative;
+    z-index: 9998;
+}
+
+/* ── TARGET HIGHLIGHT ────────────────────────────── */
+.shepherd-enabled.shepherd-target {
+    box-shadow: 0 0 0 4px rgba(83, 234, 253, 0.6),
+                0 0 28px rgba(83, 234, 253, 0.35),
+                0 0 56px rgba(83, 234, 253, 0.15) !important;
+    border-radius: 4px;
+    position: relative;
+    z-index: 9997 !important;
+    animation: target-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes target-pulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(83,234,253,0.6), 0 0 28px rgba(83,234,253,0.35), 0 0 56px rgba(83,234,253,0.15); }
+    50%       { box-shadow: 0 0 0 7px rgba(83,234,253,0.35), 0 0 40px rgba(83,234,253,0.5), 0 0 72px rgba(83,234,253,0.2); }
+}
+
+/* ── DIRECTIONAL BOUNCING ARROWS ─────────────────── */
+.shepherd-element[data-popper-placement^="top"] .codetide-shepherd-theme::after,
+.shepherd-element[data-popper-placement^="bottom"] .codetide-shepherd-theme::after,
+.shepherd-element[data-popper-placement^="left"] .codetide-shepherd-theme::after,
+.shepherd-element[data-popper-placement^="right"] .codetide-shepherd-theme::after {
+    content: '';
+    position: absolute;
+    width: 0; height: 0;
+    border-style: solid;
+    filter: drop-shadow(0 0 8px rgba(83, 234, 253, 0.6));
+    z-index: 10000;
+}
+.shepherd-element[data-popper-placement^="bottom"] .codetide-shepherd-theme::after {
+    top: -18px; left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 12px 20px 12px;
+    border-color: transparent transparent #53EAFD transparent;
+    animation: tutorial-arrow-bounce-down 1.5s ease-in-out infinite;
+}
+.shepherd-element[data-popper-placement^="top"] .codetide-shepherd-theme::after {
+    bottom: -18px; left: 50%;
+    transform: translateX(-50%);
+    border-width: 20px 12px 0 12px;
+    border-color: #53EAFD transparent transparent transparent;
+    animation: tutorial-arrow-bounce-up 1.5s ease-in-out infinite;
+}
+.shepherd-element[data-popper-placement^="right"] .codetide-shepherd-theme::after {
+    left: -18px; top: 50%;
+    transform: translateY(-50%);
+    border-width: 12px 20px 12px 0;
+    border-color: transparent #53EAFD transparent transparent;
+    animation: tutorial-arrow-bounce-right 1.5s ease-in-out infinite;
+}
+.shepherd-element[data-popper-placement^="left"] .codetide-shepherd-theme::after {
+    right: -18px; top: 50%;
+    transform: translateY(-50%);
+    border-width: 12px 0 12px 20px;
+    border-color: transparent transparent transparent #53EAFD;
+    animation: tutorial-arrow-bounce-left 1.5s ease-in-out infinite;
+}
+
+@keyframes tutorial-arrow-bounce-down {
+    0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+    50%       { transform: translateX(-50%) translateY(8px); opacity: 0.6; }
+}
+@keyframes tutorial-arrow-bounce-up {
+    0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+    50%       { transform: translateX(-50%) translateY(-8px); opacity: 0.6; }
+}
+@keyframes tutorial-arrow-bounce-left {
+    0%, 100% { transform: translateY(-50%) translateX(0); opacity: 1; }
+    50%       { transform: translateY(-50%) translateX(-8px); opacity: 0.6; }
+}
+@keyframes tutorial-arrow-bounce-right {
+    0%, 100% { transform: translateY(-50%) translateX(0); opacity: 1; }
+    50%       { transform: translateY(-50%) translateX(8px); opacity: 0.6; }
+}
+
+/* ── RESTART TUTORIAL BUTTON (navbar/profile) ────── */
+.btn-restart-tutorial {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.42rem;
+    padding: 8px 14px;
+    border: 1px solid rgba(237, 106, 255, 0.4);
+    color: rgba(237, 106, 255, 0.8);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+}
+.btn-restart-tutorial:hover {
+    color: #ED6AFF;
+    border-color: #ED6AFF;
+    background: rgba(237, 106, 255, 0.07);
+    transform: translateY(-1px);
+}
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media (max-width: 768px) {
+    .codetide-shepherd-theme {
+        max-width: calc(100vw - 24px);
+        margin: 0 12px;
+    }
+    .tutorial-content h3 { font-size: 0.6rem; }
+    .tutorial-emoji { font-size: 2rem; }
+    .codetide-shepherd-theme .shepherd-text { padding: 18px !important; font-size: 0.78rem; }
+    .codetide-shepherd-theme .shepherd-button { font-size: 0.38rem !important; padding: 8px 12px !important; }
+    .tutorial-tip { font-size: 0.7rem; }
+}

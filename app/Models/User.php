@@ -24,6 +24,7 @@ class User extends Authenticatable
         'participant_code',
         'password',
         'consent_at',
+        'tutorial_completed',
     ];
 
     /**
@@ -46,6 +47,7 @@ class User extends Authenticatable
         return [
             'consent_at' => 'datetime',
             'password' => 'hashed',
+            'tutorial_completed' => 'boolean',
         ];
     }
 

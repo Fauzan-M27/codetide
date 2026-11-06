@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ asset('css/toast.css') }}">
     <link rel="stylesheet" href="{{ asset('css/loading.css') }}">
     <link rel="stylesheet" href="{{ asset('css/mobile-responsive.css') }}">
+    @vite(['resources/css/tutorial.css', 'resources/js/app.js'])
     <script src="{{ asset('js/pxlkit-renderer.js') }}"></script>
     <style>
         *, *::before, *::after {
@@ -486,6 +487,44 @@
                 Toast.success('Profil Updated!', 'Perubahan berhasil disimpan.');
             }, 300);
         @endif
+
+        // Restart tutorial function
+        function restartTutorial() {
+            // Show pixel-style confirmation using Toast (non-blocking)
+            const confirmed = confirm('Ulangi tutorial panduan CodeTide?\n\nAnda akan diarahkan ke Dashboard dan tutorial akan muncul kembali.');
+            if (!confirmed) return;
+
+            // Reset tutorial completion status
+            fetch('{{ route("tutorial.reset") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Clear localStorage
+                    localStorage.removeItem('codetide_tutorial_completed');
+                    localStorage.removeItem('codetide_tutorial_step');
+                    
+                    // Show success message
+                    Toast.success('Tutorial Reset! 🎮', 'Memuat ulang dashboard — tutorial akan segera dimulai!');
+                    
+                    // Redirect to dashboard after a short delay
+                    setTimeout(() => {
+                        window.location.href = '{{ route("dashboard") }}';
+                    }, 1800);
+                } else {
+                    Toast.error('Gagal', 'Tidak dapat mereset tutorial. Coba lagi.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Toast.error('Error', 'Koneksi gagal. Coba lagi.');
+            });
+        }
     </script>
     <!-- Header -->
     <div class="header">
@@ -654,6 +693,10 @@
                         <span class="icon" data-pxl-icon="flag" data-pxl-scale="1"></span>
                         Lihat Leaderboard
                     </a>
+                    <button onclick="restartTutorial()" class="btn btn-icon" style="justify-content:center; border-color:var(--purple); color:var(--purple); background:rgba(237,106,255,0.06); position:relative; overflow:hidden;" title="Mulai ulang panduan penggunaan website">
+                        <span class="icon" data-pxl-icon="sparkle" data-pxl-scale="1"></span>
+                        ❓ Ulangi Tutorial
+                    </button>
                 </div>
             </div>
         </div>

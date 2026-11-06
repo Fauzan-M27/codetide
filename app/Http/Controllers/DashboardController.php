@@ -68,13 +68,20 @@ class DashboardController extends Controller
             ->take(5)
             ->values();
 
+        // Tampilkan tutorial hanya jika user baru saja login/register (session flag).
+        // session()->pull() membaca sekaligus menghapus flag, sehingga
+        // navigasi balik ke dashboard tidak memunculkan tutorial lagi.
+        $showTutorial = session()->pull('show_tutorial', false)
+                        && !$user->tutorial_completed;
+
         return view('dashboard', compact(
             'modules',
             'stats',
             'recentBadges',
             'activeCostume',
             'nextQuestion',
-            'topUsers'
+            'topUsers',
+            'showTutorial'
         ));
     }
 }

@@ -28,6 +28,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // Tandai bahwa user baru saja login agar tutorial muncul sekali di dashboard
+        $request->session()->put('show_tutorial', true);
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Dashboard — CodeTide</title>
     <meta name="description" content="Dashboard belajar CodeTide — pantau XP, badge, dan progres modulmu.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/mobile-responsive.css') }}">
+    <script src="{{ asset('js/pxlkit-renderer.js') }}"></script>
+    @vite(['resources/css/tutorial.css', 'resources/js/app.js'])
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -439,7 +442,8 @@
         }
     </style>
 </head>
-<body>
+<body data-tutorial-completed="{{ auth()->user()->tutorial_completed ? 'true' : 'false' }}"
+      data-show-tutorial="{{ $showTutorial ? 'true' : 'false' }}">
     <canvas id="bg-canvas"></canvas>
 
     <div class="page-content">
@@ -457,6 +461,10 @@
                     <a href="{{ route('costumes.index') }}">Kostumisasi</a>
                     <div class="nav-divider"></div>
                     <span class="user-name">{{ auth()->user()->nickname }}</span>
+                    <button type="button" class="btn-restart-tutorial" onclick="restartTutorial()" title="Ulangi tutorial panduan">
+                        ❓ Tutorial
+                    </button>
+                    <div class="nav-divider"></div>
                     <form method="POST" action="{{ route('logout') }}" style="display:inline;margin:0;">
                         @csrf
                         <button type="submit" class="btn-logout">Logout</button>

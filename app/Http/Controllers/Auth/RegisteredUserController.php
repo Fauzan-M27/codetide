@@ -54,6 +54,9 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        // Tandai bahwa user baru saja register agar tutorial muncul sekali di dashboard
+        $request->session()->put('show_tutorial', true);
+
         return redirect(route('dashboard', absolute: false));
     }
 
