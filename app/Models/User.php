@@ -241,8 +241,11 @@ class User extends Authenticatable
             ->pluck('question_id');
 
         // Cari soal pertama yang belum selesai, urut berdasarkan module/material/question order
-        // Gunakan 'questions.id' (qualified) agar tidak ambiguous saat JOIN
-        return Question::whereNotIn('questions.id', $completedIds)
+        // Gunakan whereRaw agar tidak ambiguous saat JOIN dengan materials & modules
+        $ids = $completedIds->isEmpty() ? [0] : $completedIds->toArray();
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+        return Question::whereRaw("questions.id NOT IN ($placeholders)", $ids)
             ->join('materials', 'questions.material_id', '=', 'materials.id')
             ->join('modules', 'materials.module_id', '=', 'modules.id')
             ->orderBy('modules.order')

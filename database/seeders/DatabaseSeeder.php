@@ -15,13 +15,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            ModuleSeeder::class,
-            MaterialSeeder::class,
-            QuestionSeeder::class,
-            BadgeSeeder::class,
-            CostumeSeeder::class,
-        ]);
+        // Hanya seed jika tabel modules masih kosong (idempotent — aman dijalankan berulang)
+        if (\DB::table('modules')->count() === 0) {
+            $this->call([
+                ModuleSeeder::class,
+                MaterialSeeder::class,
+                QuestionSeeder::class,
+                BadgeSeeder::class,
+                CostumeSeeder::class,
+            ]);
+        } else {
+            $this->command->info('Data sudah ada, skip seeding.');
+            return;
+        }
         
         // Update question_type based on material_id
         \DB::table('questions')
