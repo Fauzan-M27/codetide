@@ -24,9 +24,6 @@ class TutorialController extends Controller
         $user->tutorial_completed = true;
         $user->save();
 
-        // Log activity
-        $user->logActivity('tutorial_completed');
-
         return response()->json([
             'success' => true,
             'message' => 'Tutorial completed successfully'

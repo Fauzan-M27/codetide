@@ -26,4 +26,17 @@ class ProfileUpdateRequest extends FormRequest
             ],
         ];
     }
+
+    /**
+     * Custom error messages (Bahasa Indonesia)
+     */
+    public function messages(): array
+    {
+        return [
+            'nickname.required' => 'Nickname tidak boleh kosong.',
+            'nickname.min'      => 'Nickname minimal 3 karakter.',
+            'nickname.max'      => 'Nickname maksimal 50 karakter.',
+            'nickname.unique'   => 'The nickname has already been taken.',
+        ];
+    }
 }

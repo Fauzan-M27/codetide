@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -97,16 +98,14 @@ class User extends Authenticatable
 
     /**
      * Get total XP earned by user
+     * Dihitung langsung di SQL (1 query, bukan N query)
      */
     public function getTotalXP(): int
     {
-        return $this->progress()
+        return (int) $this->progress()
             ->whereNotNull('completed_at')
-            ->with('question')
-            ->get()
-            ->sum(function ($progress) {
-                return $progress->question->xp_reward;
-            });
+            ->join('questions', 'user_progress.question_id', '=', 'questions.id')
+            ->sum('questions.xp_reward');
     }
 
     /**
@@ -143,16 +142,25 @@ class User extends Authenticatable
 
     /**
      * Get user's rank on leaderboard
+     * Dihitung dengan 1 query agregat, bukan N+1 per user
      */
     public function getRank(): int
     {
-        $userXP = $this->getTotalXP();
-        
-        return self::all()
-            ->filter(function ($user) use ($userXP) {
-                return $user->getTotalXP() > $userXP;
+        $myXP = $this->getTotalXP();
+
+        // Hitung XP setiap user dalam 1 query GROUP BY
+        $allUserXps = DB::table('users')
+            ->where('users.id', '!=', $this->id)
+            ->leftJoin('user_progress', function ($join) {
+                $join->on('user_progress.user_id', '=', 'users.id')
+                     ->whereNotNull('user_progress.completed_at');
             })
-            ->count() + 1;
+            ->leftJoin('questions', 'user_progress.question_id', '=', 'questions.id')
+            ->groupBy('users.id')
+            ->selectRaw('COALESCE(SUM(questions.xp_reward), 0) as total_xp')
+            ->pluck('total_xp');
+
+        return $allUserXps->filter(fn($xp) => $xp > $myXP)->count() + 1;
     }
 
     // ==========================================
@@ -223,12 +231,26 @@ class User extends Authenticatable
 
     /**
      * Get next unlocked question for user
+     * Pakai query DB langsung, bukan load semua soal ke PHP
      */
     public function getNextUnlockedQuestion(): ?Question
     {
-        return Question::all()->first(function ($question) {
-            return $question->isUnlockedFor($this) && !$question->isCompletedBy($this);
-        });
+        // Ambil ID soal yang sudah selesai
+        $completedIds = $this->progress()
+            ->whereNotNull('completed_at')
+            ->pluck('question_id');
+
+        // Cari soal pertama yang belum selesai, urut berdasarkan module/material/question order
+        // Gunakan 'questions.id' (qualified) agar tidak ambiguous saat JOIN
+        return Question::whereNotIn('questions.id', $completedIds)
+            ->join('materials', 'questions.material_id', '=', 'materials.id')
+            ->join('modules', 'materials.module_id', '=', 'modules.id')
+            ->orderBy('modules.order')
+            ->orderBy('materials.order')
+            ->orderBy('questions.order')
+            ->select('questions.*')
+            ->get()
+            ->first(fn($question) => $question->isUnlockedFor($this));
     }
 
     /**

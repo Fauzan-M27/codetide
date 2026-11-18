@@ -740,7 +740,7 @@
                                 <div class="badge-info">
                                     <div class="bname">{{ $badge->name }}</div>
                                     <div class="bdesc">{{ $badge->description }}</div>
-                                    <div class="btime">{{ $badge->pivot->earned_at->diffForHumans() }}</div>
+                                    <div class="btime">{{ $badge->pivot->earned_at ? \Carbon\Carbon::parse($badge->pivot->earned_at)->diffForHumans() : '-' }}</div>
                                 </div>
                             </div>
                             @endforeach

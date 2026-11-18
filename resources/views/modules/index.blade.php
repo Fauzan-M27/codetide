@@ -438,6 +438,17 @@
             opacity: 0.9;
         }
 
+        @keyframes flash-in {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hover effect for locked module cards */
+        .module-card.locked:hover {
+            border-color: rgba(255, 107, 107, 0.4) !important;
+            box-shadow: 8px 8px 0 rgba(255, 107, 107, 0.08) !important;
+        }
+
         /* ── RESPONSIVE ──────────────────────────────────── */
         @media (max-width: 768px) {
             .modules-container {
@@ -483,7 +494,46 @@
 
         <!-- Modules Container -->
         <main class="modules-container">
-            
+
+            <!-- Flash Messages -->
+            @if(session('error'))
+            <div id="flash-error" style="
+                background: rgba(255,107,107,0.12);
+                border: 1px solid rgba(255,107,107,0.5);
+                color: #FF6B6B;
+                padding: 14px 20px;
+                margin-bottom: 20px;
+                font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                animation: flash-in 0.3s ease;
+            ">
+                <span>⚠</span>
+                <span>{{ session('error') }}</span>
+                <button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;color:#FF6B6B;cursor:pointer;font-size:1rem;">✕</button>
+            </div>
+            @endif
+
+            @if(session('success'))
+            <div id="flash-success" style="
+                background: rgba(123,241,168,0.12);
+                border: 1px solid rgba(123,241,168,0.5);
+                color: #7BF1A8;
+                padding: 14px 20px;
+                margin-bottom: 20px;
+                font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                animation: flash-in 0.3s ease;
+            ">
+                <span>✓</span>
+                <span>{{ session('success') }}</span>
+                <button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;color:#7BF1A8;cursor:pointer;font-size:1rem;">✕</button>
+            </div>
+            @endif
+
             <!-- Header -->
             <div class="modules-header">
                 <div>
@@ -512,7 +562,11 @@
                 @foreach($modules as $module)
                 <div class="module-card {{ !$module['is_unlocked'] ? 'locked' : ($module['is_completed'] ? 'complete' : '') }}"
                      data-status="{{ !$module['is_unlocked'] ? 'locked' : ($module['is_completed'] ? 'complete' : 'active') }}"
-                     data-num="{{ str_pad($module['order'], 2, '0', STR_PAD_LEFT) }}">
+                     data-num="{{ str_pad($module['order'], 2, '0', STR_PAD_LEFT) }}"
+                     @if(!$module['is_unlocked'])
+                         onclick="handleLockedModuleClick(event, {{ $module['id'] }})"
+                         style="cursor: not-allowed;"
+                     @endif>
                     
                     <div class="module-card-header">
                         <span class="module-number">M{{ str_pad($module['order'], 2, '0', STR_PAD_LEFT) }}</span>
@@ -537,8 +591,10 @@
                         @foreach($module['materials'] as $material)
                         <li class="{{ !$material['is_unlocked'] ? 'locked' : ($material['is_completed'] ? 'complete' : 'active') }}"
                             @if($material['is_unlocked'])
-                                onclick="window.location.href='{{ route('materials.materi', $material['id']) }}'"
+                                onclick="event.stopPropagation(); window.location.href='{{ route('materials.materi', $material['id']) }}'"
                                 style="cursor: pointer;"
+                            @else
+                                style="cursor: not-allowed;"
                             @endif>
                             <span>{{ $material['title'] }}</span>
                             <span class="level-progress">{{ $material['completed_questions'] }}/{{ $material['total_questions'] }} soal</span>
@@ -562,6 +618,28 @@
     <script src="{{ asset('js/pxlkit-renderer.js') }}"></script>
     <script src="{{ asset('js/scene3d.js') }}"></script>
     <script>
+        // Handler HANYA untuk modul yang terkunci
+        function handleLockedModuleClick(event, moduleId) {
+            // Jangan ikuti klik item materi di dalam card
+            event.stopPropagation();
+            // Redirect ke modules.show → controller cek lock → redirect balik dgn pesan error
+            window.location.href = '/modules/' + moduleId;
+        }
+
+        // Auto-dismiss flash messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', () => {
+            ['flash-error', 'flash-success'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    setTimeout(() => {
+                        el.style.transition = 'opacity 0.5s';
+                        el.style.opacity = '0';
+                        setTimeout(() => el.remove(), 500);
+                    }, 5000);
+                }
+            });
+        });
+
         // PxlKit Icon Map
         const PXL_MAP = {
             lightning:() => typeof PXL_LIGHTNING    !== 'undefined' ? PXL_LIGHTNING     : null,

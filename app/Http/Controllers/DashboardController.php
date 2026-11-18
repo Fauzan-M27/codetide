@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Module;
+use App\Models\UserProgress;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -57,16 +59,23 @@ class DashboardController extends Controller
         // Get next question
         $nextQuestion = $user->getNextUnlockedQuestion();
 
-        // Top leaderboard — sorted by XP (computed in controller to avoid N+1 in view)
-        $topUsers = \App\Models\User::all()
-            ->map(fn ($u) => [
+        // Top leaderboard — hitung XP semua user dalam 1 query agregat (bukan N+1)
+        $topUsers = \App\Models\User::select('users.id', 'users.nickname')
+            ->leftJoin('user_progress', function ($join) {
+                $join->on('user_progress.user_id', '=', 'users.id')
+                     ->whereNotNull('user_progress.completed_at');
+            })
+            ->leftJoin('questions', 'user_progress.question_id', '=', 'questions.id')
+            ->groupBy('users.id', 'users.nickname')
+            ->selectRaw('users.id, users.nickname, COALESCE(SUM(questions.xp_reward), 0) as total_xp')
+            ->orderByDesc('total_xp')
+            ->take(5)
+            ->get()
+            ->map(fn($u) => [
                 'id'       => $u->id,
                 'nickname' => $u->nickname,
-                'xp'       => $u->getTotalXP(),
-            ])
-            ->sortByDesc('xp')
-            ->take(5)
-            ->values();
+                'xp'       => (int) $u->total_xp,
+            ]);
 
         // Tampilkan tutorial hanya jika user baru saja login/register (session flag).
         // session()->pull() membaca sekaligus menghapus flag, sehingga

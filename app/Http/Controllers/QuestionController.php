@@ -148,13 +148,21 @@ class QuestionController extends Controller
                     'xp_earned' => $question->xp_reward,
                     'attempts' => $progress->attempts,
                 ]);
-
-                // Check and award badges
-                $this->checkAndAwardBadges($user);
-
-                // Check and unlock costumes based on XP/badges
-                $user->checkAndUnlockCostumes();
             });
+
+            // Check and award badges (diluar transaction agar tidak rollback jika ada error)
+            try {
+                $this->checkAndAwardBadges($user);
+            } catch (\Throwable $e) {
+                \Log::warning('Badge check failed: ' . $e->getMessage());
+            }
+
+            // Check and unlock costumes based on XP/badges
+            try {
+                $user->checkAndUnlockCostumes();
+            } catch (\Throwable $e) {
+                \Log::warning('Costume unlock check failed: ' . $e->getMessage());
+            }
 
             $result['xp_earned'] = $question->xp_reward;
             
@@ -1177,9 +1185,7 @@ class QuestionController extends Controller
                 $user->badges()->attach($badge->id, [
                     'earned_at' => now(),
                 ]);
-
-                // Log activity
-                $user->logActivity('earn_badge', $badge->id);
+                // Badge tercatat di tabel user_badges, tidak perlu activity log
             }
         }
     }

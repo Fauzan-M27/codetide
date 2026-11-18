@@ -365,6 +365,27 @@
             font-size: 0.875rem;
         }
 
+        /* Form input error state */
+        .form-input.is-error {
+            border-color: var(--red);
+        }
+
+        .form-error-msg {
+            color: var(--red);
+            font-size: 0.78rem;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* Danger Zone */
+        .danger-zone {
+            border-color: var(--red) !important;
+        }
+
+        .danger-zone .card-title {
+            color: var(--red);
+        }
+
         /* Full Width */
         .full-width {
             grid-column: 1 / -1;
@@ -444,47 +465,44 @@
     <script>
         // Profile form submission with loading & toast
         document.getElementById('profileForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const form = this;
             const saveBtn = document.getElementById('saveBtn');
-            
-            // Show button loading
             Loading.button(saveBtn, true, 'MENYIMPAN...');
-            
-            // Submit form via AJAX
-            fetch(form.action, {
-                method: 'POST',
-                body: new FormData(form),
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                Loading.button(saveBtn, false);
-                
-                if (data.success) {
-                    Toast.success('Profil Updated!', 'Perubahan berhasil disimpan.');
-                    
-                    // Update nickname di halaman jika ada
-                    if (data.nickname) {
-                        document.querySelector('input[name="nickname"]').value = data.nickname;
-                    }
-                } else {
-                    Toast.error('Gagal Update', data.message || 'Terjadi kesalahan.');
-                }
-            })
-            .catch(error => {
-                Loading.button(saveBtn, false);
-                Toast.error('Error', 'Koneksi gagal. Coba lagi.');
-                console.error('Error:', error);
-            });
+            // Biarkan form submit normal (bukan AJAX)
         });
-        
-        // Show success toast if redirected with status
+
+        // Tampilkan toast dari session
         @if (session('status') === 'profile-updated')
             setTimeout(() => {
-                Toast.success('Profil Updated!', 'Perubahan berhasil disimpan.');
+                Toast.success('Profil Updated!', 'Nickname berhasil diperbarui.');
+            }, 300);
+        @endif
+
+        // Tampilkan toast error validasi dari session
+        @if ($errors->has('nickname'))
+            setTimeout(() => {
+                Toast.error('Validasi Gagal', '{{ $errors->first('nickname') }}');
+            }, 300);
+        @endif
+
+        // Tampilkan toast sukses ganti password
+        @if (session('status') === 'password-updated')
+            setTimeout(() => {
+                Toast.success('Password Diperbarui!', 'Kamu bisa login dengan password baru.');
+            }, 300);
+        @endif
+
+        // Tampilkan toast error ganti password
+        @if ($errors->updatePassword->any())
+            setTimeout(() => {
+                Toast.error('Validasi Gagal', '{{ $errors->updatePassword->first() }}');
+            }, 300);
+        @endif
+
+        // Auto-buka modal hapus akun jika ada error
+        @if ($errors->userDeletion->any())
+            document.getElementById('deleteAccountModal').style.display = 'flex';
+            setTimeout(() => {
+                Toast.error('Password Salah', '{{ $errors->userDeletion->first() }}');
             }, 300);
         @endif
 
@@ -567,7 +585,10 @@
 
                     <div class="form-group">
                         <label class="form-label">Nickname</label>
-                        <input type="text" name="nickname" class="form-input" value="{{ old('nickname', $user->nickname) }}" required>
+                        <input type="text" name="nickname" class="form-input {{ $errors->has('nickname') ? 'is-error' : '' }}" value="{{ old('nickname', $user->nickname) }}" required>
+                        @error('nickname')
+                            <span style="color:#FF6B6B; font-size:0.78rem; margin-top:4px; display:block;">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="form-group">
@@ -699,7 +720,124 @@
                     </button>
                 </div>
             </div>
+
+            {{-- ===================== GANTI PASSWORD ===================== --}}
+            <div class="card full-width">
+                <h2 class="card-title">
+                    <span class="icon" data-pxl-icon="save" data-pxl-scale="2"></span>
+                    Ganti Password
+                </h2>
+
+                @if (session('status') === 'password-updated')
+                    <div class="alert" style="margin-bottom:16px;">
+                        Password berhasil diperbarui!
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('password.update') }}">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="form-group">
+                        <label class="form-label">Password Lama</label>
+                        <input type="password" name="current_password"
+                               class="form-input {{ $errors->updatePassword->has('current_password') ? 'is-error' : '' }}"
+                               placeholder="Masukkan password lama" autocomplete="current-password">
+                        @if ($errors->updatePassword->has('current_password'))
+                            <span class="form-error-msg">{{ $errors->updatePassword->first('current_password') }}</span>
+                        @endif
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password Baru</label>
+                        <input type="password" name="password"
+                               class="form-input {{ $errors->updatePassword->has('password') ? 'is-error' : '' }}"
+                               placeholder="Minimal 8 karakter" autocomplete="new-password">
+                        @if ($errors->updatePassword->has('password'))
+                            <span class="form-error-msg">{{ $errors->updatePassword->first('password') }}</span>
+                        @endif
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Konfirmasi Password Baru</label>
+                        <input type="password" name="password_confirmation"
+                               class="form-input"
+                               placeholder="Ulangi password baru" autocomplete="new-password">
+                    </div>
+
+                    <button type="submit" class="btn btn-icon">
+                        <span class="icon" data-pxl-icon="save" data-pxl-scale="1"></span>
+                        Ganti Password
+                    </button>
+                </form>
+            </div>
+
+            {{-- ===================== HAPUS AKUN ===================== --}}
+            <div class="card full-width danger-zone">
+                <h2 class="card-title">
+                    ⚠ Hapus Akun
+                </h2>
+                <p style="color: var(--muted); font-size: 0.875rem; margin-bottom: 20px; line-height: 1.6;">
+                    Setelah akun dihapus, semua data termasuk progress, badge, dan kostum akan hilang secara permanen.
+                    Tindakan ini <strong style="color: var(--red);">tidak dapat dibatalkan</strong>.
+                </p>
+
+                <button type="button" class="btn btn-danger btn-icon"
+                        onclick="document.getElementById('deleteAccountModal').style.display='flex'">
+                    🗑 Hapus Akun
+                </button>
+            </div>
+
         </div>
     </div>
+
+    {{-- ===================== MODAL HAPUS AKUN ===================== --}}
+    <div id="deleteAccountModal" style="
+        display: none;
+        position: fixed; inset: 0; z-index: 999;
+        background: rgba(0,0,0,0.75);
+        align-items: center; justify-content: center;
+    ">
+        <div style="
+            background: var(--bg2);
+            border: 1px solid var(--red);
+            padding: 32px;
+            max-width: 420px;
+            width: 90%;
+        ">
+            <h3 style="font-family: var(--ff-pixel); color: var(--red); font-size: 0.75rem; margin-bottom: 16px;">
+                ⚠ Konfirmasi Hapus Akun
+            </h3>
+            <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 20px; line-height: 1.6;">
+                Masukkan password kamu untuk mengonfirmasi penghapusan akun.
+            </p>
+
+            <form method="POST" action="{{ route('profile.destroy') }}">
+                @csrf
+                @method('DELETE')
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password"
+                           class="form-input {{ $errors->userDeletion->has('password') ? 'is-error' : '' }}"
+                           placeholder="Masukkan password" id="deletePasswordInput">
+                    @if ($errors->userDeletion->has('password'))
+                        <span class="form-error-msg">{{ $errors->userDeletion->first('password') }}</span>
+                    @endif
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top: 8px;">
+                    <button type="submit" class="btn btn-danger btn-icon">
+                        🗑 Hapus Akun
+                    </button>
+                    <button type="button" class="btn btn-icon"
+                            onclick="document.getElementById('deleteAccountModal').style.display='none'">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>
