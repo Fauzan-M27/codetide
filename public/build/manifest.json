@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-BtKlZZ3K.css",
+    "file": "assets/app-CB5_Ztbv.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -8,13 +8,31 @@
       "app.css"
     ]
   },
+  "resources/css/tutorial.css": {
+    "file": "assets/tutorial-DBkF-aof.css",
+    "src": "resources/css/tutorial.css",
+    "isEntry": true,
+    "name": "tutorial",
+    "names": [
+      "tutorial.css"
+    ]
+  },
   "resources/js/app.js": {
-    "file": "assets/app-DdnDHPWc.js",
+    "file": "assets/app-Cr47kHMk.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
+    "imports": [
+      "resources/js/tutorial.js"
+    ]
+  },
+  "resources/js/tutorial.js": {
+    "file": "assets/tutorial-BKHO04HR.js",
+    "name": "tutorial",
+    "src": "resources/js/tutorial.js",
+    "isEntry": true,
     "css": [
-      "assets/app-B-qsDQli.css"
+      "assets/tutorial-B-qsDQli.css"
     ]
   }
 }
