@@ -2,7 +2,13 @@
 set -e
 
 echo "=== Running migrations ==="
-php artisan migrate:fresh --force --seed
+php artisan migrate --force
+
+echo "=== Running seeders ==="
+php artisan db:seed --force
+
+echo "=== Fixing starter code newlines ==="
+php fix-starter-code.php
 
 echo "=== Linking storage ==="
 php artisan storage:link || true
